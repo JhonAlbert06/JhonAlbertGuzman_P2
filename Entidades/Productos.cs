@@ -5,6 +5,7 @@ namespace JhonAlbertGuzman_P2.Entidades
 {
     public class Productos
     {
+        [Key]
         public int ProductoId { get; set; }
         public string Descripcion { get; set; }
         public double Existencia { get; set; }
