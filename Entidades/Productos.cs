@@ -13,7 +13,7 @@ namespace JhonAlbertGuzman_P2.Entidades
         public double ValorInventario { get; set; }
         public double Ganancia { get; set; }
         public double Precio { get; set; } 
-        public DateTime Fecha { get; set; }
+        public DateTime? Fecha { get; set; }
 
         [ForeignKey("ProductoId")]
         public List<ProductosDetalle> Detalle { get; set; } = new List<ProductosDetalle> ();

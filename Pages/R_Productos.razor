@@ -4,7 +4,7 @@
 <EditForm Model="producto" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
-    <div class="container-md">
+    <div class="container-sm row-cols-md-2">
 
         <div class="card shadow-lg">
 
@@ -16,11 +16,8 @@
 
                 @* Buscar *@
                 <div class="form-group align-items-right">
-
                     <div class="form-row">
-
                         <label>Producto Id</label>
-
                         <div class="input-group">
 
                             <InputNumber @bind-Value="producto.ProductoId" class="form-control col-4 col" />
@@ -29,45 +26,52 @@
                                 <button type="button" class="btn btn-success input-group-text "
                                     @onclick="Buscar"><span class="oi oi-magnifying-glass">Buscar</span></button>
                             </div>
-
                         </div>
-
                     </div>
-                    
                 </div>
 
                 <hr>
 
+                @* Descripcion *@
                 <div class="row">
-
-                    @* Descripcion *@
                     <div class="form-group col">
                         <label>Descripción</label>
                         <InputText class="form-control" @bind-Value="producto.Descripcion" placeholder="Descripción del producto"/>
                         <ValidationMessage For="@(() => producto.Descripcion)" />
                     </div>
+                </div>
 
-                    @* Existencia *@
+                <br>
+
+                @* Existencia *@
+                <div class="row">
                     <div class="form-group col">
                         <label>Existencia</label>
                         <InputNumber class="form-control" @bind-Value="producto.Existencia" @onchange="CalculoValorInventario" />
                         <ValidationMessage For="@(() => producto.Existencia)" />
                     </div>
+                </div>
 
-                    @* Costo *@
+                <br>
+
+                @* Costo *@
+                <div class="row">
                     <div class="form-group col">
                         <label>Costo</label>
                         <InputNumber class="form-control" @bind-Value="producto.Costo" @onchange="CalculoValorInventario"/>
                         <ValidationMessage For="@(() => producto.Costo)" />
                     </div>
+                </div>
 
-                    @* Valor Inventario *@
+                <br>
+
+                @* Valor Inventario *@
+                <div class="row">    
                     <div class="form-group col">
                         <label>Valor Inventario</label>
                         <InputNumber readonly class="form-control" @bind-Value="producto.ValorInventario" />
                         <ValidationMessage For="@(() => producto.ValorInventario)" />
                     </div>
-
                 </div>
 
                 <br>
@@ -92,7 +96,7 @@
 
                     <form>
 
-                        <div class=" row input-group d-flex align-items-end">
+                        <div class="row   align-items-end">
 
                             @* Presentacion *@
                             <div class="form-group col">
@@ -106,12 +110,6 @@
                                 <label>Cantidad</label>
                                 <InputNumber class="form-control" @bind-Value="Cantidad" />
                                 <ValidationMessage For="@(() => Cantidad)" />
-                                @if(Cantidad < 0)
-                                {
-                                    <label>
-                                        La Cantidad No puede ser mejor a cero
-                                    </label>
-                                }
                             </div>
 
                             @* Precio *@
@@ -119,16 +117,10 @@
                                 <label>Precio</label>
                                 <InputNumber class="form-control" @bind-Value="Precio" />
                                 <ValidationMessage For="@(() => Precio)" />
-                                @if(Precio < 0)
-                                {
-                                    <label>
-                                        El Precio No puede ser mejor a cero
-                                    </label>
-                                }
                             </div>
 
                             <button type="button" class="btn btn-success col" @onclick="AgregarDetalle">
-                                <span class="oi oi-plus">Agregar Detalle</span>
+                                <span class="oi oi-plus"> Agregar</span>
                             </button>
 
                         </div>
@@ -138,7 +130,6 @@
                         <table class="table table-secondary">
                             <thead class="thead-dark">
                                 <tr class="table-info">
-                                    <th>Id</th>
                                     <th>Presentacion</th>
                                     <th>Cantidad</th>
                                     <th>Precio</th>
@@ -148,7 +139,6 @@
                                 @foreach (var item in producto.Detalle)
                                 {
                                     <tr>
-                                        <td>@item.ProductoId</td>
                                         <td>@item.Presentacion</td>
                                         <td>@item.Cantidad</td>
                                         <td>RD$ @item.Precio</td>
@@ -171,15 +161,15 @@
                 <div class="form-group text-center" display: inline-block>
                     
                     <button type="button" class="btn btn-lg btn-primary" @onclick="Nuevo">
-                        <span class="oi oi-plus">Nuevo</span>
+                        <span class="oi oi-plus"> Nuevo</span>
                     </button>
                     
                     <button type="submit" class="btn btn-lg btn-success">
-                        <span class="oi oi-folder">Guardar</span>
+                        <span class="oi oi-folder"> Guardar</span>
                     </button>
                     
                     <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
-                        <span class="oi oi-trash">Eliminar</span>
+                        <span class="oi oi-trash"> Eliminar</span>
                     </button>
 
                 </div>

@@ -5,19 +5,19 @@
 
 <EditForm Model="lista">
     <DataAnnotationsValidator />
-    
+
     <div class="card">
-    
+
         <div class="card-header">
             <h3>Consulta de Productos</h3>
         </div>
-    
+
         <div class="card-body">
-    
+
             <form>
-    
+
                 <div class="input-group d-flex align-items-end">
-                    
+
                     <select class="form-control col-2" @bind="Filtro">
                         <option value="0"></option>
                         <option value="1">Id</option>
@@ -25,38 +25,35 @@
                         <option value="3">Fecha y ID</option>
                         <option value="4">Fecha y Descripción</option>
                     </select>
-                    
+
                     <div class="flex-fill mx-2">
                         <label>Criterio</label>
-                        <input type="text" class="form-control" @bind="Criterio" placeholder="Escriba Aqui"/>
+                        <input type="text" class="form-control" @bind="Criterio" placeholder="Escriba Aqui" />
                     </div>
 
-                    @if(Filtro == "3" || Filtro == "4")
-                    {
-                        <div class="flex-fill mx-2">
-                            <label>Desde</label>
-                            <input type="date" class="form-control" @bind="Desde"/>
-                        </div>
+                    <div class="flex-fill mx-2">
+                        <label>Desde</label>
+                        <input type="date" class="form-control" @bind="Desde" />
+                    </div>
 
-                        <div class="flex-fill mx-2">
-                            <label>Hasta</label>
-                            <input type="date" class="form-control" @bind="Hasta"/>
-                        </div>    
+                    <div class="flex-fill mx-2">
+                        <label>Hasta</label>
+                        <input type="date" class="form-control" @bind="Hasta" />
+                    </div>
 
-                    }
 
                     <button type="button" class="btn btn-warning" @onclick="Buscar">
-                        <i class="oi oi-magnifying-glass mr-2"/> Buscar
+                        <i class="oi oi-magnifying-glass mr-2" /> Buscar
                     </button>
 
                 </div>
-                
+
             </form>
-    
+
         </div>
-    
+
         <table class="table table-secondary">
-    
+
             <thead class="thead-dark">
                 <tr class="table-info">
                     <th>Id</th>
@@ -67,7 +64,7 @@
                     <th>Fecha Expiracion</th>
                 </tr>
             </thead>
-    
+
             <tbody>
                 @foreach (var item in lista)
                 {
@@ -77,20 +74,21 @@
                         <td>@item.Existencia</td>
                         <td>RD$ @item.Costo</td>
                         <td>RD$ @item.ValorInventario</td>
-                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
-                        <td><a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Productos/@item.ProductoId">Ver</a></td>
+                        <td>@item.Fecha</td> @* .ToString("dd/MM/yyyy") *@
+                        <td><a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Productos/@item.ProductoId">Ver</a>
+                        </td>
                     </tr>
                 }
             </tbody>
-    
+
         </table>
-    
+
     </div>
 </EditForm>
 
 
 
-@code{
+@code {
     public string Filtro { get; set; }
     public string Criterio { get; set; }
     public DateTime Desde { get; set; }
@@ -105,23 +103,24 @@
 
         if (Criterio != null)
         {
-            switch(Filtro)
+            switch (Filtro)
             {
                 case "1":
                     lista = productosBLL.GetList(t => t.ProductoId == int.Parse(Criterio));
-                break;
+                    break;
 
                 case "2":
-                    lista = productosBLL.GetList(t => t.Descripcion.ToLower().Contains(Criterio.ToLower())); 
-                break;
+                    lista = productosBLL.GetList(t => t.Descripcion.ToLower().Contains(Criterio.ToLower()));
+                    break;
 
                 case "3":
                     lista = productosBLL.GetList(t => (t.Fecha >= Desde && t.Fecha <= Hasta) && t.ProductoId == int.Parse(Criterio));
-                break;
+                    break;
 
                 case "4":
-                    lista = productosBLL.GetList(t => (t.Fecha >= Desde && t.Fecha <= Hasta) && t.Descripcion.ToLower().Contains(Criterio.ToLower()));
-                break;
+                    lista = productosBLL.GetList(t => (t.Fecha >= Desde && t.Fecha <= Hasta) &&
+                    t.Descripcion.ToLower().Contains(Criterio.ToLower()));
+                    break;
             }
         }
         else
