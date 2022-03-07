@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Productos_Detalle.Entidades
+namespace JhonAlbertGuzman_P2.Entidades
 {
     
     public class ProductosDetalle
