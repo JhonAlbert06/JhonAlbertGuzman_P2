@@ -13,6 +13,7 @@ namespace JhonAlbertGuzman_P2.Entidades
         public double Precio { get; set; }
         public double Costo { get; set; }
         public double Ganancia { get; set; }
+        public DateTime? Fecha { get; set; }
 
         public ProductosDetalle()
         {
@@ -27,6 +28,13 @@ namespace JhonAlbertGuzman_P2.Entidades
             this.Presentacion = descripcion;
             this.Cantidad = cantidad;
             this.Precio = precio;
+        }
+        public ProductosDetalle(string descripcion, double cantidad, double precio, DateTime fecha)
+        {
+            this.Presentacion = descripcion;
+            this.Cantidad = cantidad;
+            this.Precio = precio;
+            this.Fecha = fecha;
         }
 
     }
