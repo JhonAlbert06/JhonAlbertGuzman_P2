@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-using JhonAlbertGuzman_P2.Data;
 using Blazored.Toast;
 using JhonAlbertGuzman_P2.BLL;
 using JhonAlbertGuzman_P2.DAL;
@@ -13,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Aqui inyectamos el DbContext
