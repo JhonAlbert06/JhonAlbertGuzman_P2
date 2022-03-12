@@ -21,6 +21,7 @@ builder.Services.AddDbContext<Contexto>(options =>
 
 builder.Services.AddBlazoredToast();
 builder.Services.AddTransient<ProductoBLL>();
+builder.Services.AddTransient<ProductoEmpaqueBLL>();
 
 var app = builder.Build();
 
