@@ -1,8 +1,9 @@
 @page "/R_ProductosEmpaque"
 @* @page "/R_Productos/{ProductoId:int}" *@
 
-<EditForm Model="producto" OnValidSubmit="Guardar">
+<EditForm Model="productoEmpaque" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
+    <ValidationSummary />
 
     <div class="container-sm row-cols-md-1">
 
@@ -20,7 +21,7 @@
                         <label>Producto Id: </label>
                         <div class="input-group">
 
-                            <InputNumber @bind-Value="producto.Id" class="form-control col-4 col" />
+                            <InputNumber @bind-Value="productoEmpaque.Id" class="form-control col-4 col" />
 
                             <div class="input-group-append col">
 
@@ -29,13 +30,6 @@
                                 </button>
                             </div>
                         </div>
-
-                        @if (producto.Id < 0)
-                        {
-                            <div class="invalid-feedback">
-                                <label>El id No puede estar negativo</label>
-                            </div>
-                        }
                     </div>
                 </div>
 
@@ -56,9 +50,9 @@
                 <div class="row">
                     <div class="form-group col">
                         <label>Concepto: </label>
-                        <InputText class="form-control" @bind-Value="producto.Concepto"
+                        <InputText class="form-control" @bind-Value="productoEmpaque.Concepto"
                             placeholder="Descripción del producto" />
-                        <ValidationMessage For="@(() => producto.Concepto)" />
+                        <ValidationMessage For="@(() => productoEmpaque.Concepto)" />
                     </div>
                 </div>
 
@@ -90,8 +84,8 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="producto.CantidadUtilizados" />
-                                <ValidationMessage For="@(() => producto.CantidadUtilizados)" />
+                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadUtilizados" />
+                                <ValidationMessage For="@(() => productoEmpaque.CantidadUtilizados)" />
                             </div>
 
                             <div class="form-group col">
@@ -148,7 +142,7 @@
 
                     <form>
 
-                        <div class="row">   
+                        <div class="row">
 
                             @* Combo BOX Productos *@
                             <div class="form-group col">
@@ -164,14 +158,14 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="producto.CantidadProducido" />
-                                <ValidationMessage For="@(() => producto.CantidadProducido)" />
+                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadProducido" />
+                                <ValidationMessage For="@(() => productoEmpaque.CantidadProducido)" />
                             </div>
-                   
+
                         </div>
-                   
+
                     </form>
-                
+
                 </div>
             </div>
 
@@ -205,7 +199,9 @@
 
 @code {
 
-    public ProductosEmpaque producto { get; set; } = new ProductosEmpaque();
+    public int indice { get; set; } = 0;
+    public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
+    public Productos producto { get; set; } = new Productos();
 
     [Parameter]
     public int ProductoId { get; set; }
@@ -215,13 +211,13 @@
 
     protected override void OnInitialized()
     {
-        producto.Id = ProductoId;
+        productoEmpaque.Id = ProductoId;
         Buscar();
     }
 
     public void Buscar()
     {
-        if (this.producto.Id > 0)
+        if (this.productoEmpaque.Id > 0)
         {
             @* ProductosEmpaque encontrado = productosBLL.Buscar(this.producto.Id);
 
@@ -243,7 +239,7 @@
 
     public void Nuevo()
     {
-        producto = new ProductosEmpaque();
+        productoEmpaque = new ProductosEmpaque();
     }
 
     public void Guardar()
