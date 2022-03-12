@@ -227,10 +227,12 @@
 
         if (productosBLL.Guardar(producto))
         {
+            Nuevo();
             toastService.ShowInfo("Se guardó exitosamente");
         }
         else
             toastService.ShowError("No se pudo guardar.");
+
     }
     public void Eliminar()
     {
