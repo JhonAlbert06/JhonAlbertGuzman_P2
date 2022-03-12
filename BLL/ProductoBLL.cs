@@ -28,7 +28,6 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                //producto.ValorInventario = producto.Costo * producto.Existencia;
                 if (_contexto.Productos.Add(producto) != null)
                     paso = _contexto.SaveChanges() > 0;
             }
