@@ -19,11 +19,9 @@
                 <div class="input-group d-flex align-items-end">
 
                     <select class="form-control col-2" @bind="Filtro">
-                        <option value="0"></option>
-                        <option value="1">Id</option>
-                        <option value="2">Descripción</option>
-                        <option value="3">Fecha y ID</option>
-                        <option value="4">Fecha y Descripción</option>
+                        <option></option>
+                        <option value="0">Id</option>
+                        <option value="1">Descripción</option>
                     </select>
 
                     <div class="flex-fill mx-2">
@@ -105,22 +103,23 @@
         {
             switch (Filtro)
             {
+                case "0":
+
+                    if (Criterio != null)
+                        lista = productosBLL.GetList(t => t.ProductoId == int.Parse(Criterio) && (t.Fecha >= Desde || t.Fecha <= Hasta) );
+                    else
+                        lista = productosBLL.GetList(t => (t.Fecha >= Desde || t.Fecha <= Hasta));
+                    
+                break;
+
                 case "1":
-                    lista = productosBLL.GetList(t => t.ProductoId == int.Parse(Criterio));
-                    break;
 
-                case "2":
-                    lista = productosBLL.GetList(t => t.Descripcion.ToLower().Contains(Criterio.ToLower()));
-                    break;
-
-                case "3":
-                    lista = productosBLL.GetList(t => (t.Fecha >= Desde && t.Fecha <= Hasta) && t.ProductoId == int.Parse(Criterio));
-                    break;
-
-                case "4":
-                    lista = productosBLL.GetList(t => (t.Fecha >= Desde && t.Fecha <= Hasta) &&
-                    t.Descripcion.ToLower().Contains(Criterio.ToLower()));
-                    break;
+                    if (Criterio != null)
+                        lista = productosBLL.GetList(t => t.Descripcion.ToLower().Contains(Criterio.ToLower()) && (t.Fecha >= Desde || t.Fecha <= Hasta)  );
+                    else
+                        lista = productosBLL.GetList(t => (t.Fecha >= Desde || t.Fecha <= Hasta));
+                    
+                break;
             }
         }
         else
@@ -128,4 +127,7 @@
             lista = productosBLL.GetList(t => true);
         }
     }
+
+
+
 }
