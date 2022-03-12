@@ -6,6 +6,8 @@ namespace JhonAlbertGuzman_P2.Entidades
     public class Productos
     {
         [Key]
+
+        [Range(0, int.MaxValue, ErrorMessage = "El ID debe estar en el rango de {1} y {2}.")]
         public int ProductoId { get; set; }
 
         [Required(ErrorMessage = "Es obligatorio introducir la descripcion")]
@@ -15,7 +17,7 @@ namespace JhonAlbertGuzman_P2.Entidades
         [Range(1, int.MaxValue, ErrorMessage = "La existencia debe estar en el rango de {1} y {2}.")]
         public double Existencia { get; set; }
         
-         [Required(ErrorMessage = "El Costo no puede estar vacio...")]
+        [Required(ErrorMessage = "El Costo no puede estar vacio...")]
         [Range(1, double.MaxValue, ErrorMessage = "El Costo debe estar en el rango de {1} y {2}.")]
         public double Costo { get; set; }
         public double ValorInventario { get; set; }
