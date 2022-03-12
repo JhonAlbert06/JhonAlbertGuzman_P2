@@ -1,5 +1,4 @@
 @page "/R_ProductosEmpaque"
-@* @page "/R_Productos/{ProductoId:int}" *@
 
 <EditForm Model="productoEmpaque" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -21,7 +20,7 @@
                         <label>Producto Id: </label>
                         <div class="input-group">
 
-                            <InputNumber @bind-Value="productoEmpaque.Id" class="form-control col-4 col" />
+                            <InputNumber @bind-Value="productoEmpaque.ProductoId" class="form-control col-4 col" />
 
                             <div class="input-group-append col">
 
@@ -39,8 +38,8 @@
                 <div class="row">
                     <div class="form-group col">
                         <label>Fecha de Expiracion: </label>
-                        <InputDate class="form-control" @bind-Value="producto.Fecha" />
-                        <ValidationMessage For="@(() => producto.Fecha)" />
+                        <InputDate class="form-control" @bind-Value="productoEmpaque.Fecha" />
+                        <ValidationMessage For="@(() => productoEmpaque.Fecha)" />
                     </div>
                 </div>
 
@@ -123,7 +122,9 @@
 
                     @* Total *@
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">Peso Total: </span>
+                        <span class="input-group-text" id="basic-addon1">
+                            Peso Total: 
+                        </span>
                         <input type="text" class="form-control" readonly>
                     </div>
 
@@ -132,6 +133,7 @@
                 <hr>
                 <br>
 
+                @* Producidos *@
                 <div class="card">
 
                     <div class="card-header">
@@ -158,7 +160,7 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadProducido" />
+                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadPro" />
                                 <ValidationMessage For="@(() => productoEmpaque.CantidadProducido)" />
                             </div>
 
@@ -201,35 +203,21 @@
 
     public int indice { get; set; } = 0;
     public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
-    public Productos producto { get; set; } = new Productos();
-
-    [Parameter]
-    public int ProductoId { get; set; }
 
     [Inject]
     public ProductoBLL productosBLL { get; set; }
+    
+    [Inject]
+    public ProductoEmpaqueBLL productosEmpaqueBLL { get; set; }
 
     protected override void OnInitialized()
     {
-        productoEmpaque.Id = ProductoId;
-        Buscar();
+        
     }
 
     public void Buscar()
     {
-        if (this.productoEmpaque.Id > 0)
-        {
-            @* ProductosEmpaque encontrado = productosBLL.Buscar(this.producto.Id);
-
-                if (encontrado != null)
-                {
-                this.producto = encontrado;
-                }
-                else
-                {
-                toastService.ShowError("No se encontró el producto");
-                } *@
-        }
+        
     }
 
     public void AgregarUtilizados()
@@ -239,36 +227,17 @@
 
     public void Nuevo()
     {
-        productoEmpaque = new ProductosEmpaque();
+        
     }
 
     public void Guardar()
     {
-        @* if (productosBLL.Guardar(producto))
-            {
-            toastService.ShowInfo("Se guardó exitosamente");
-            }
-            else
-            toastService.ShowError("No se pudo guardar."); *@
+        
     }
     public void Eliminar()
     {
-        @* if (productosBLL.Eliminar(producto.Id))
-            {
-            Nuevo();
-            toastService.ShowSuccess("Eliminación exitosa");
-            }
-            else
-            {
-            toastService.ShowError("Eliminación fallida");
-            } *@
+        
     }
 
-    @*
-        private void RemoverFila(ProductosDetalle item)
-        {
-        this.producto.Detalle.Remove(item);
-        }
-    *@
 
 }
