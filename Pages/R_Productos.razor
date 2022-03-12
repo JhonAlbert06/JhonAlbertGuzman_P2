@@ -3,8 +3,9 @@
 
 <EditForm Model="producto" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
+    <ValidationSummary />
 
-    <div class="container-sm row-cols-md-2">
+    <div class="container-sm row-cols-md-1">
 
         <div class="card shadow-lg">
 
@@ -17,16 +18,16 @@
                 @* Buscar *@
                 <div class="form-group align-items-right">
                     <div class="form-row">
-                        <label>Producto Id</label>
-                        <div class="input-group">
-
+                        <label>Producto Id: </label>
+                        <div class="input-group col">
                             <InputNumber @bind-Value="producto.ProductoId" class="form-control col-4 col" />
-
                             <div class="input-group-append col">
-                                <button type="button" class="btn btn-success input-group-text "
-                                    @onclick="Buscar"><span class="oi oi-magnifying-glass">Buscar</span></button>
+                                <button type="button" class="btn btn-success" @onclick="Buscar">
+                                    <span class="oi oi-magnifying-glass">Buscar</span>
+                                </button>
                             </div>
                         </div>
+                        <ValidationMessage For="@(() => producto.ProductoId)"/>
                     </div>
                 </div>
 
@@ -35,8 +36,8 @@
                 @* Descripcion *@
                 <div class="row">
                     <div class="form-group col">
-                        <label>Descripción</label>
-                        <InputText class="form-control" @bind-Value="producto.Descripcion" placeholder="Descripción del producto"/>
+                        <label>Descripción: </label>
+                        <InputText class="form-control" @bind-Value="@producto.Descripcion" placeholder="Descripción del producto"/>
                         <ValidationMessage For="@(() => producto.Descripcion)" />
                     </div>
                 </div>
@@ -46,8 +47,8 @@
                 @* Existencia *@
                 <div class="row">
                     <div class="form-group col">
-                        <label>Existencia</label>
-                        <InputNumber class="form-control" @bind-Value="producto.Existencia" @onchange="CalculoValorInventario" />
+                        <label>Existencia: </label>
+                        <InputNumber class="form-control" @bind-Value="@producto.Existencia"/>
                         <ValidationMessage For="@(() => producto.Existencia)" />
                     </div>
                 </div>
@@ -57,8 +58,8 @@
                 @* Costo *@
                 <div class="row">
                     <div class="form-group col">
-                        <label>Costo</label>
-                        <InputNumber class="form-control" @bind-Value="producto.Costo" @onchange="CalculoValorInventario"/>
+                        <label>Costo: </label>
+                        <InputNumber class="form-control" @bind-Value="@producto.Costo"/>
                         <ValidationMessage For="@(() => producto.Costo)" />
                     </div>
                 </div>
@@ -68,8 +69,8 @@
                 @* Valor Inventario *@
                 <div class="row">    
                     <div class="form-group col">
-                        <label>Valor Inventario</label>
-                        <InputNumber readonly class="form-control" @bind-Value="producto.ValorInventario" />
+                        <label>Valor Inventario: </label>
+                        <InputNumber readonly class="form-control" @bind-Value="@producto.ValorInventario" />
                         <ValidationMessage For="@(() => producto.ValorInventario)" />
                     </div>
                 </div>
@@ -79,8 +80,8 @@
                 <div class="row">
                     @* Fecha *@
                     <div class="form-group col">
-                        <label>Fecha de Expiracion</label>
-                        <InputDate class="form-control" @bind-Value="producto.Fecha" />
+                        <label>Fecha de Expiracion: </label>
+                        <InputDate class="form-control" @bind-Value="@producto.Fecha" />
                         <ValidationMessage For="@(() => producto.Fecha)" />
                     </div>
                 </div>
@@ -96,27 +97,24 @@
 
                     <form>
 
-                        <div class="row   align-items-end">
+                        <div class=" row align-items-end">
 
                             @* Presentacion *@
                             <div class="form-group col">
-                                <label>Presentación</label>
-                                <InputText class="form-control" @bind-Value="Presentacion" placeholder="Presentación del producto"/>
-                                <ValidationMessage For="@(() => Presentacion)" />
+                                <label>Presentación: </label>
+                                <InputText class="form-control" @bind-Value="@Presentacion"/>
                             </div>
 
                             @* Cantidad *@
                             <div class="form-group col">
-                                <label>Cantidad</label>
-                                <InputNumber class="form-control" @bind-Value="Cantidad" />
-                                <ValidationMessage For="@(() => Cantidad)" />
+                                <label>Cantidad: </label>
+                                <InputNumber class="form-control" @bind-Value="@Cantidad" />
                             </div>
 
                             @* Precio *@
                             <div class="form-group col">
-                                <label>Precio</label>
-                                <InputNumber class="form-control" @bind-Value="Precio" />
-                                <ValidationMessage For="@(() => Precio)" />
+                                <label>Precio: </label>
+                                <InputNumber class="form-control" @bind-Value="@Precio" />
                             </div>
 
                             <button type="button" class="btn btn-success col" @onclick="AgregarDetalle">
@@ -147,17 +145,14 @@
                                 }
                             </tbody>
                         </table>
+                    
                     </form>
-
+                
                 </div>
-
-
-
             </div>
 
+            @* Botones *@
             <div class="card-footer">
-
-                @* Botones *@
                 <div class="form-group text-center" display: inline-block>
                     
                     <button type="button" class="btn btn-lg btn-primary" @onclick="Nuevo">
@@ -171,14 +166,11 @@
                     <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
                         <span class="oi oi-trash"> Eliminar</span>
                     </button>
-
                 </div>
-
             </div>
-
+        
         </div>
     </div>
-
 </EditForm>
 
 @inject IToastService toastService
