@@ -9,7 +9,7 @@ namespace JhonAlbertGuzman_P2.BLL
     {
        private Contexto _contexto;
 
-       public ProductoBLL(Contexto contexto)
+       public ProductoEmpaqueBLL(Contexto contexto)
        {
            _contexto = contexto;
        } 
@@ -28,7 +28,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                _contexto.Productos.Add(producto)
+                _contexto.Productos.Add(producto);
                 paso = _contexto.SaveChanges() > 0;
             }
             catch (Exception)
@@ -45,7 +45,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                _contexto.Database.ExecuteSqlRaw($"DELETE FROM ProductosDetalle WHERE ProductoId={producto.ProductoId}");
+                _contexto.Database.ExecuteSqlRaw($"DELETE FROM ProductosEmpaque WHERE ProductoId={producto.ProductoId}");
 
                 foreach (var Anterior in producto.Detalle)
                 {
