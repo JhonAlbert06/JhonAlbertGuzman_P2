@@ -103,16 +103,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @* @foreach (var item in producto)
-                                    {
+                                @foreach (var item in lista)
+                                {
                                     <tr>
-                                    <td>@item.Id</td>
-                                    <td>@item.Concepto</td>
-                                    <td>@item.Cantidad</td>
-                                    <td><span class="btn btn-sm btn-outline-primary oi oi-ban" href="#" @onclick=" (() =>
-                                    RemoverFila(item)) "> Remover</span></td>
+                                        
+                                        <td>@item.ProductoId</td>
+                                        <td>@item.Concepto</td>
+                                        <td>@item.CantidadUtilizados</td>
+                                    
+                                        <td>
+                                            <span class="btn btn-sm btn-outline-primary oi oi-ban" href="#" @onclick=" (() =>
+                                                RemoverFila(item)) "> Remover
+                                            </span>
+                                        </td>
+
                                     </tr>
-                                    } *@
+                                }
                             </tbody>
                         </table>
                     </form>
@@ -200,6 +206,7 @@
 
     public int indice { get; set; } = 0;
     public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
+    public List<ProductosEmpaque> lista { get; set; } = new List<ProductosEmpaque>();
 
     [Inject]
     public ProductoBLL productosBLL { get; set; }
@@ -236,5 +243,9 @@
         
     }
 
+    private void RemoverFila(ProductosEmpaque item)
+    {
+        @* this.productoEmpaque.Producidos.Remove(item); *@
+    }
 
 }
