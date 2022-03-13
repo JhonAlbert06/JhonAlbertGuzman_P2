@@ -19,7 +19,7 @@
                     <div class="form-row">
                         <label>Producto Id: </label>
                         <div class="input-group">
-                            <InputNumber @bind-Value="productoEmpaque.ProductoId" class="form-control col-4 col"/>
+                            <InputNumber @bind-Value="productoEmpaque.ProductoId" class="form-control col-4 col" />
                             <div class="input-group-append col">
                                 <button type="button" class="btn btn-success input-group-text" @onclick="Buscar">
                                     <span class="oi oi-magnifying-glass"> Buscar</span>
@@ -68,12 +68,15 @@
 
                             <div class="form-group col">
                                 <label>Productos: </label>
-                                @* <InputSelect id="producto" @bind-Value="producto.ProductoId">
-                                    @foreach (var item in productoEmpaque)
+                                <InputSelect id="SelectProductos" @bind-Value="producto.Descripcion" class="form-control">
+
+                                    <option></option>
+
+                                    @foreach (var item in listaProductos)
                                     {
-                                        <option value="@item.ProductoId">@item.Concepto</option>
+                                        <option value="@item.Descripcion">@item.Descripcion</option>
                                     }
-                                </InputSelect> *@
+                                </InputSelect>
                             </div>
 
                             @* Cantidad *@
@@ -102,21 +105,26 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in lista)
+                                @foreach (var item in productoEmpaque.Producidos)
                                 {
-                                    <tr>
-                                        
-                                        <td>@item.ProductoId</td>
-                                        <td>@item.Concepto</td>
-                                        <td>@item.CantidadUtilizados</td>
-                                    
-                                        <td>
-                                            <span class="btn btn-sm btn-outline-primary oi oi-ban" href="#" @onclick=" (() =>
-                                                RemoverFila(item)) "> Remover
-                                            </span>
-                                        </td>
 
-                                    </tr>
+                                    @if(producto.Descripcion == item.Descripcion)
+                                    {
+                                    
+                                        <tr>
+
+                                            <td>@item.ProductoEmpaqueId</td>
+                                            <td>@item.Descripcion</td>
+                                            <td>@item.Cantidad</td>
+
+                                            <td>
+                                                <span class="btn btn-sm btn-outline-primary oi oi-ban" href="#" @onclick=" (() =>
+                                                    RemoverFila(item)) "> Remover
+                                                </span>
+                                            </td>
+
+                                        </tr>
+                                    }
                                 }
                             </tbody>
                         </table>
@@ -125,11 +133,11 @@
                     @* Total *@
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
-                            Peso Total: 
+                            Peso Total:
                         </span>
-                        <input type="text" class="form-control" readonly>
+                        <input conten="KG" type="number" class="form-control" readonly>
                     </div>
-
+                    
                 </div>
 
                 <hr>
@@ -150,7 +158,7 @@
 
                             @* Combo BOX Productos *@
                             <div class="form-group col">
-                                
+
                                 <label>Productos: </label>
 
                                 <select class="form-select col">
@@ -164,8 +172,8 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadUtilizados" />
-                                <ValidationMessage For="@(() => productoEmpaque.CantidadUtilizados)" />
+                                <InputNumber class="form-control" @bind-Value="this.cantidad" />
+                                <ValidationMessage For="@(() => this.cantidad)" />
                             </div>
 
                         </div>
@@ -205,51 +213,49 @@
 
 @code {
 
-    public int indice { get; set; } = 0;
+    public int cantidad { get; set; } = 0;
+    
     public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
-
-    public List<ProductosEmpaque> lista { get; set; } = new List<ProductosEmpaque>();
+    public List<ProductosEmpaque> listaEmpaque { get; set; } = new List<ProductosEmpaque>();
     
     public Productos producto { get; set; } = new Productos();
+    public List<Productos> listaProductos { get; set; } = new List<Productos>();
 
     [Inject]
     public ProductoBLL productosBLL { get; set; }
-    
-    [Inject]
-    public ProductoEmpaqueBLL productosEmpaqueBLL { get; set; }
 
     protected override void OnInitialized()
     {
-
+        listaProductos = productosBLL.GetList(t => true);
     }
 
     public void Buscar()
     {
-        
+
     }
-
+    // OJO:  hacer migracion y update a la base de datos
     public void AgregarUtilizados()
-    {
-
+    {  
+        this.productoEmpaque.Producidos.Add(new Producido(productoEmpaque.CantidadUtilizados, producto.Descripcion));
     }
 
     public void Nuevo()
     {
-        
+
     }
 
     public void Guardar()
     {
-        
+
     }
     public void Eliminar()
     {
-        
+
     }
 
-    private void RemoverFila(ProductosEmpaque item)
+    private void RemoverFila(Producido item)
     {
-        @* this.productoEmpaque.Producidos.Remove(item); *@
+        this.productoEmpaque.Producidos.Remove(item);
     }
 
 }
