@@ -7,7 +7,6 @@ namespace JhonAlbertGuzman_P2.Entidades
     {
         public int Id { get; set; }
         public int ProductoEmpaqueId { get; set; }
-        public List<string> ListaProductos { get; set;}
         public int cantidad { get; set; }
     }
 }
