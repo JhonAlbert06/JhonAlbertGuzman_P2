@@ -91,7 +91,9 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                producto = _contexto.Productos.Include(x => x.Detalle).Where(p => p.ProductoId == Id).SingleOrDefault();
+                producto = _contexto.Productos.Include(x => x.Detalle)
+                    .Where(p => p.ProductoId == Id)
+                    .SingleOrDefault();
             }
             catch (Exception)
             {
