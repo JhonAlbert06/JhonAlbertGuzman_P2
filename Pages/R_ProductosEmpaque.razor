@@ -219,6 +219,7 @@
 
 @code {
 
+    public string Mixto { get; set; }
     public string Descripcion { get; set; }
     public int CantidadUtilizado { get; set; } = 0;
     public int CantidadProducido { get; set; } = 0;
@@ -334,6 +335,7 @@
     public void LlenarLista(string descripcion)
     {
         listaCreados.Add(descripcion);
+        Mixto += @"{descripcion}";
     }
 
     public void RestaInvetarios(int cantidad)
