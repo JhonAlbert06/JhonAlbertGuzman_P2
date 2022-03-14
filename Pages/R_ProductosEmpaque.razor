@@ -292,12 +292,14 @@
     {
         this.productoEmpaque.Utilizados.Remove(item);
         CacularRestaTotal(item.Descripcion, item.Cantidad);
+        SumaInventario(item.Cantidad);
     }
 
     public void AgregarUtilizados()
     {
         this.productoEmpaque.Utilizados.Add(utilizado = new Utilizados(CantidadUtilizado, Descripcion));
         CacularPesoTotal(Descripcion, CantidadUtilizado);
+        RestaInvetarios(CantidadUtilizado);
         LlenarLista(Descripcion);
     }
     public void AgregarProducido()
@@ -321,7 +323,9 @@
         {
             if (descripcion == item.Descripcion)
             {
-                
+                double auxiliar = Total;
+                double resta = (item.Peso * cantidad);
+                Total = auxiliar - resta;
             }
         }
     }
@@ -330,6 +334,16 @@
     public void LlenarLista(string descripcion)
     {
         listaCreados.Add(descripcion);
+    }
+
+    public void RestaInvetarios(int cantidad)
+    {
+        producto.Existencia -= cantidad;
+    }
+
+    public void SumaInventario(int cantidad)
+    {
+        producto.Existencia += cantidad;
     }
 
 }
