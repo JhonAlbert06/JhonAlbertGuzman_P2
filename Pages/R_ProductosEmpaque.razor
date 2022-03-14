@@ -85,8 +85,8 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="this.cantidad" />
-                                <ValidationMessage For="@(() => this.cantidad)" />
+                                <InputNumber class="form-control" @bind-Value="CantidadUtilizado" />
+                                <ValidationMessage For="@(() => CantidadUtilizado)" />
                             </div>
                             
                             @* Boton Agregar Utizados *@
@@ -166,10 +166,10 @@
                                 <InputSelect id="SelectProductos" @bind-Value="ProductosCreados" class="form-control">
 
                                     <option></option>
-
-                                    @foreach (var item in )
+                                    
+                                    @foreach (var item in listaCreados)
                                     {
-                                        <option value="@item.Descripcion">@item.Descripcion</option>
+                                        <option value="@item">@item</option>
                                     }
 
                                 </InputSelect>
@@ -178,8 +178,8 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadUtilizados" />
-                                <ValidationMessage For="@(() => productoEmpaque.CantidadUtilizados)" />
+                                <InputNumber class="form-control" @bind-Value="CantidadProducido" />
+                                <ValidationMessage For="@(() => CantidadProducido)" />
                             </div>
 
                         </div>
@@ -218,14 +218,14 @@
 @code {
 
     public string Descripcion { get; set; }
-    public int cantidad { get; set; } = 0;
+    public int CantidadUtilizado { get; set; } = 0;
+    public int CantidadProducido { get; set; } = 0;
     public string ProductosCreados { get; set; }
-
     public double Total { get; set; } = 0;
 
     public Productos producto { get; set; } = new Productos();
-
-    public Utilizados producido { get; set; } = new Utilizados();
+    public Utilizados utilizado { get; set; } = new Utilizados();
+    public Producidos producido { get; set; } = new Producidos();
     public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
     public List<Productos> listaProductos { get; set; } = new List<Productos>();
 
@@ -258,11 +258,6 @@
             }
         }
     }
-    public void AgregarUtilizados()
-    {
-        this.productoEmpaque.Utilizados.Add(producido = new Utilizados(cantidad, Descripcion));
-        CacularPesoTotal(Descripcion, cantidad);
-    }
 
     public void Nuevo()
     {
@@ -271,6 +266,7 @@
 
     public void Guardar()
     {
+        AgregarProducido();
         if (productosEmpaqueBLL.Guardar(productoEmpaque))
         {
             toastService.ShowInfo("Se guardó exitosamente");
@@ -294,9 +290,19 @@
     private void RemoverFila(Utilizados item)
     {
         this.productoEmpaque.Utilizados.Remove(item);
-        CacularRestaTotal(producido.Descripcion, producido.Cantidad);
+        CacularRestaTotal(utilizado.Descripcion, utilizado.Cantidad);
     }
 
+    public void AgregarUtilizados()
+    {
+        this.productoEmpaque.Utilizados.Add(utilizado = new Utilizados(CantidadUtilizado, Descripcion));
+        CacularPesoTotal(Descripcion, CantidadUtilizado);
+        LlenarLista(Descripcion);
+    }
+    public void AgregarProducido()
+    {
+        this.productoEmpaque.Producidos.Add(producido = new Producidos(CantidadProducido, ProductosCreados));
+    }
     public void CacularPesoTotal(string descripcion, int cantidad)
     {
         foreach (var item in listaProductos)
@@ -320,6 +326,12 @@
                 resta = 0;
             }
         }
+    }
+
+    public List<string> listaCreados = new List<string>();
+    public void LlenarLista(string descripcion)
+    {
+        listaCreados.Add(descripcion);
     }
 
 }
