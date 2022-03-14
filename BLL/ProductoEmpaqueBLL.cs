@@ -130,13 +130,44 @@ namespace JhonAlbertGuzman_P2.BLL
             return paso;
         }
         
-        public List<ProductosEmpaque> GetList(Expression<Func<ProductosEmpaque, bool>> critero)
+        public List<ProductosEmpaque> GetListEmpaque(Expression<Func<ProductosEmpaque, bool>> critero)
         {
             List<ProductosEmpaque> lista = new List<ProductosEmpaque>();
 
             try
             {
                 lista = _contexto.ProductosEmpaque.Where(critero).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return lista;
+        }
+        public List<Utilizados> GetListUtilizado(Expression<Func<Utilizados, bool>> critero)
+        {
+            List<Utilizados> lista = new List<Utilizados>();
+
+            try
+            {
+                lista = _contexto.Utilizados.Where(critero).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return lista;
+        }
+
+        public List<Producidos> GetListProducidos(Expression<Func<Producidos, bool>> critero)
+        {
+            List<Producidos> lista = new List<Producidos>();
+
+            try
+            {
+                lista = _contexto.Producidos.Where(critero).ToList();
             }
             catch (Exception)
             {
