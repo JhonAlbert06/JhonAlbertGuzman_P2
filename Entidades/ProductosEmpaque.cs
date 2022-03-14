@@ -17,8 +17,8 @@ namespace JhonAlbertGuzman_P2.Entidades
         [Range(1, int.MaxValue, ErrorMessage = "La cantidad debe estar en el rango de {1} y {2}.")]
         public int CantidadUtilizados { get; set; }
 
-        [ForeignKey("ProductoEmpaqueId")]
-        public List<Producido> Producidos { get; set; } = new List<Producido>();
+        [ForeignKey("ProductoId")]
+        public List<Utilizado> Producidos { get; set; } = new List<Utilizado>();
 
     }
 }
