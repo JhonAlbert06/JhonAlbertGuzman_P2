@@ -65,7 +65,7 @@
                     <form>
 
                         <div class="row align-items-end">
-                            
+
                             @* ComboBox Productos *@
                             <div class="form-group col">
                                 <label>Productos: </label>
@@ -107,22 +107,26 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in productoEmpaque.Producidos)
-                                {
-                                    <tr>
+                                
+                                    @foreach (var item in productoEmpaque.Producidos)
+                                    {
+                                        @if (this.producto.Descripcion == item.Descripcion)
+                                        {
+                                            <tr>
 
-                                        <td>@item.ProductoEmpaqueId</td>
-                                        <td>@item.Descripcion</td>
-                                        <td>@item.Cantidad</td>
+                                                <td>@producto.ProductoId</td>
+                                                <td>@item.Descripcion</td>
+                                                <td>@item.Cantidad</td>
 
-                                        <td>
-                                            <span class="btn btn-sm btn-outline-primary oi oi-ban" href="#" @onclick=" (() =>
+                                                <td>
+                                                    <span class="btn btn-sm btn-outline-primary oi oi-ban" href="#" @onclick=" (() =>
                                                 RemoverFila(item)) "> Remover
-                                            </span>
-                                        </td>
+                                                    </span>
+                                                </td>
 
-                                    </tr>                                
-                                }
+                                            </tr>
+                                        }
+                                    }
                             </tbody>
                         </table>
                     </form>
@@ -130,11 +134,11 @@
                     @* Total *@
                     <div class="input-group mb-2">
                         <span class="input-group-text">
-                            Peso Total: Kg
+                            Peso Total: Gramos:
                         </span>
                         <InputNumber class="form-control" @bind-Value="Total" readonly />
                     </div>
-                    
+
                 </div>
 
                 <hr>
@@ -169,7 +173,7 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadUtilizados"/>
+                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadUtilizados" />
                                 <ValidationMessage For="@(() => productoEmpaque.CantidadUtilizados)" />
                             </div>
 
@@ -211,13 +215,15 @@
 @code {
 
     public string Descripcion { get; set; }
-    public int cantidad { get; set; } = 0; 
+    public int cantidad { get; set; } = 0;
 
 
     public double Total { get; set; } = 0;
-    
+
+    public Productos producto { get; set; } = new Productos();
+
     public Producido producido { get; set; } = new Producido();
-    public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();    
+    public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
     public List<Productos> listaProductos { get; set; } = new List<Productos>();
 
     [Inject]
@@ -232,11 +238,33 @@
     {
 
     }
-    // OJO:  hacer migracion y update a la base de datos
+    // OJO: hacer migracion y update a la base de datos
     public void AgregarUtilizados()
-    {  
-        this.productoEmpaque.Producidos.Add(producido = new Producido(cantidad,Descripcion));        
-        Total = Total + cantidad;
+    {
+        this.productoEmpaque.Producidos.Add(producido = new Producido(cantidad, Descripcion));
+        CacularPesoTotal(Descripcion, cantidad);
+    }
+
+    public void CacularPesoTotal(string descripcion, int cantidad)
+    {
+        foreach (var item in listaProductos)
+        {
+            if (descripcion == item.Descripcion)
+            {
+                Total += (item.Peso * cantidad);
+            }
+        }
+    }
+
+    public void CacularRestaTotal(string descripcion, int cantidad)
+    {
+        foreach (var item in listaProductos)
+        {
+            if (descripcion == item.Descripcion)
+            {
+                Total = (item.Peso * cantidad);
+            }
+        }
     }
 
     public void Nuevo()
@@ -256,6 +284,7 @@
     private void RemoverFila(Producido item)
     {
         this.productoEmpaque.Producidos.Remove(item);
+        CacularRestaTotal(producido.Descripcion, producido.Cantidad);
     }
 
 }
