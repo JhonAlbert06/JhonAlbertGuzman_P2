@@ -28,7 +28,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                _contexto.ProductosEmpaque.Add(producto);
+                _contexto.ProductosEmpaque.Add(producto).State = EntityState.Added;
                 paso = _contexto.SaveChanges() > 0;
             }
             catch (Exception)
@@ -45,21 +45,14 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                _contexto.Database.ExecuteSqlRaw($"DELETE FROM ProductosEmpaque WHERE ProductoId={producto.ProductoId}");
-
-                foreach (var Anterior in producto.Utilizados)
-                {
-                    _contexto.Entry(Anterior).State = EntityState.Added;
-                }
-
-                _contexto.Entry(producto).State = EntityState.Modified;
-
+                _contexto.ProductosEmpaque.Update(producto);
                 paso = _contexto.SaveChanges() > 0;
             }
             catch (Exception)
             {
                 throw;
             }
+            
             return paso;
         }
 
