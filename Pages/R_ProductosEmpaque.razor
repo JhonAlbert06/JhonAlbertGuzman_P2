@@ -68,7 +68,7 @@
 
                             <div class="form-group col">
                                 <label>Productos: </label>
-                                <InputSelect id="SelectProductos" @bind-Value="producto.Descripcion" class="form-control">
+                                <InputSelect id="SelectProductos" @bind-Value="Descripcion" class="form-control">
 
                                     <option></option>
 
@@ -82,8 +82,8 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadUtilizados" />
-                                <ValidationMessage For="@(() => productoEmpaque.CantidadUtilizados)" />
+                                <InputNumber class="form-control" @bind-Value="this.cantidad" />
+                                <ValidationMessage For="@(() => this.cantidad)" />
                             </div>
 
                             <div class="form-group col">
@@ -107,9 +107,6 @@
                             <tbody>
                                 @foreach (var item in productoEmpaque.Producidos)
                                 {
-
-                                    @if(producto.Descripcion == item.Descripcion)
-                                    {
                                     
                                         <tr>
 
@@ -124,18 +121,18 @@
                                             </td>
 
                                         </tr>
-                                    }
+                                
                                 }
                             </tbody>
                         </table>
                     </form>
 
                     @* Total *@
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">
-                            Peso Total:
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">
+                            Peso Total: Kg
                         </span>
-                        <input conten="KG" type="number" class="form-control" readonly>
+                        <InputNumber class="form-control" @bind-Value="Total" readonly />
                     </div>
                     
                 </div>
@@ -213,10 +210,14 @@
 
 @code {
 
-    public int cantidad { get; set; } = 0;
+    public string Descripcion { get; set; }
+    public int cantidad { get; set; } = 0; 
+
+
+    public double Total { get; set; } = 0;
     
+    public Producido producido { get; set; } = new Producido();
     public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
-    public List<ProductosEmpaque> listaEmpaque { get; set; } = new List<ProductosEmpaque>();
     
     public Productos producto { get; set; } = new Productos();
     public List<Productos> listaProductos { get; set; } = new List<Productos>();
@@ -236,7 +237,8 @@
     // OJO:  hacer migracion y update a la base de datos
     public void AgregarUtilizados()
     {  
-        this.productoEmpaque.Producidos.Add(new Producido(productoEmpaque.CantidadUtilizados, producto.Descripcion));
+        this.productoEmpaque.Producidos.Add(producido = new Producido(cantidad,Descripcion));        
+        Total = Total + cantidad;
     }
 
     public void Nuevo()
