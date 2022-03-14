@@ -10,9 +10,7 @@
         <div class="card shadow-lg">
 
             <div class="card-header">
-                <h3 class="card-title">
-                    Registro de Empaques
-                </h3>
+                <h3 class="card-title">Registro de Empaques</h3>
             </div>
 
             <div class="card-body">
@@ -111,12 +109,12 @@
                             </thead>
                             <tbody>
 
-                                @foreach (var item in productoEmpaque.Utilizados)
+                                @foreach (var item in productoEmpaque.Producidos)
                                 {
 
                                     <tr>
 
-                                        <td>@item.ProductoId</td>
+                                        <td>@producto.ProductoId</td>
                                         <td>@item.Descripcion</td>
                                         <td>@item.Cantidad</td>
 
@@ -192,21 +190,15 @@
                 <div class="form-group text-center" display: inline-block>
 
                     <button type="button" class="btn btn-lg btn-primary" @onclick="Nuevo">
-                        <span class="oi oi-plus">
-                             Nuevo
-                        </span>
+                        <span class="oi oi-plus"> Nuevo</span>
                     </button>
 
                     <button type="submit" class="btn btn-lg btn-success">
-                        <span class="oi oi-folder"> 
-                             Guardar
-                        </span>
+                        <span class="oi oi-folder"> Guardar</span>
                     </button>
 
                     <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
-                        <span class="oi oi-trash">
-                             Eliminar
-                        </span>
+                        <span class="oi oi-trash"> Eliminar</span>
                     </button>
 
                 </div>
