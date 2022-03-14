@@ -172,6 +172,8 @@
                                         <option value="@item">@item</option>
                                     }
 
+                                    <option value="Mixtas">Mixtas</option>
+
                                 </InputSelect>
                             </div>
 
@@ -222,7 +224,6 @@
     public int CantidadProducido { get; set; } = 0;
     public string ProductosCreados { get; set; }
     public double Total { get; set; } = 0;
-
     public Productos producto { get; set; } = new Productos();
     public Utilizados utilizado { get; set; } = new Utilizados();
     public Producidos producido { get; set; } = new Producidos();
@@ -290,7 +291,7 @@
     private void RemoverFila(Utilizados item)
     {
         this.productoEmpaque.Utilizados.Remove(item);
-        CacularRestaTotal(utilizado.Descripcion, utilizado.Cantidad);
+        CacularRestaTotal(item.Descripcion, item.Cantidad);
     }
 
     public void AgregarUtilizados()
@@ -320,10 +321,7 @@
         {
             if (descripcion == item.Descripcion)
             {
-                double resta = (item.Peso * cantidad);
-                double auxiliar = Total - resta;
-                Total = auxiliar;
-                resta = 0;
+                
             }
         }
     }
