@@ -14,21 +14,21 @@ namespace JhonAlbertGuzman_P2.BLL
            _contexto = contexto;
        } 
 
-       public bool Guardar(Productos producto)
+       public bool Guardar(ProductosEmpaque producto)
         {
-            if (!Existe(producto.Descripcion))
+            if (!Existe(producto.Concepto))
                 return Insertar(producto);
             else
                 return Modificar(producto);
         }
 
-        private bool Insertar(Productos producto)
+        private bool Insertar(ProductosEmpaque producto)
         {
             bool paso = false;
 
             try
             {
-                _contexto.Productos.Add(producto);
+                _contexto.ProductosEmpaque.Add(producto);
                 paso = _contexto.SaveChanges() > 0;
             }
             catch (Exception)
@@ -39,7 +39,7 @@ namespace JhonAlbertGuzman_P2.BLL
             return paso;
         }
 
-        private bool Modificar(Productos producto)
+        private bool Modificar(ProductosEmpaque producto)
         {
             bool paso = false;
 
@@ -47,7 +47,7 @@ namespace JhonAlbertGuzman_P2.BLL
             {
                 _contexto.Database.ExecuteSqlRaw($"DELETE FROM ProductosEmpaque WHERE ProductoId={producto.ProductoId}");
 
-                foreach (var Anterior in producto.Detalle)
+                foreach (var Anterior in producto.Producidos)
                 {
                     _contexto.Entry(Anterior).State = EntityState.Added;
                 }
@@ -69,11 +69,11 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                var producto = _contexto.Productos.Find(Id);
+                var producto = _contexto.ProductosEmpaque.Find(Id);
 
                 if (producto != null)
                 {
-                    _contexto.Productos.Remove(producto);
+                    _contexto.ProductosEmpaque.Remove(producto);
                     paso = _contexto.SaveChanges() > 0;
                 }
             }
@@ -85,13 +85,13 @@ namespace JhonAlbertGuzman_P2.BLL
             return paso;
         }
 
-        public Productos Buscar(int Id)
+        public ProductosEmpaque Buscar(int Id)
         {
-            Productos producto;
+            ProductosEmpaque producto;
 
             try
             {
-                producto = _contexto.Productos.Include(x => x.Detalle)
+                producto = _contexto.ProductosEmpaque.Include(x => x.Producidos)
                 .Where(p => p.ProductoId == Id)
                 .SingleOrDefault();
             }
@@ -109,7 +109,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                paso = _contexto.Productos.Any(p => p.Descripcion == descripcion);
+                paso = _contexto.ProductosEmpaque.Any(p => p.Concepto == descripcion);
             }
             catch (Exception)
             {
@@ -125,7 +125,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                paso = _contexto.Productos.Any(p => p.ProductoId == Id);
+                paso = _contexto.ProductosEmpaque.Any(p => p.ProductoId == Id);
             }
             catch (Exception)
             {
@@ -135,13 +135,13 @@ namespace JhonAlbertGuzman_P2.BLL
             return paso;
         }
         
-        public List<Productos> GetList(Expression<Func<Productos, bool>> critero)
+        public List<ProductosEmpaque> GetList(Expression<Func<ProductosEmpaque, bool>> critero)
         {
-            List<Productos> lista = new List<Productos>();
+            List<ProductosEmpaque> lista = new List<ProductosEmpaque>();
 
             try
             {
-                lista = _contexto.Productos.Where(critero).ToList();
+                lista = _contexto.ProductosEmpaque.Where(critero).ToList();
             }
             catch (Exception)
             {
