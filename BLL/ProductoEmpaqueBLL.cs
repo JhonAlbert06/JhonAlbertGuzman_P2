@@ -47,7 +47,7 @@ namespace JhonAlbertGuzman_P2.BLL
             {
                 _contexto.Database.ExecuteSqlRaw($"DELETE FROM ProductosEmpaque WHERE ProductoId={producto.ProductoId}");
 
-                foreach (var Anterior in producto.Producidos)
+                foreach (var Anterior in producto.Utilizados)
                 {
                     _contexto.Entry(Anterior).State = EntityState.Added;
                 }
@@ -91,7 +91,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                producto = _contexto.ProductosEmpaque.Include(x => x.Producidos)
+                producto = _contexto.ProductosEmpaque.Include(x => x.Utilizados)
                 .Where(p => p.ProductoId == Id)
                 .SingleOrDefault();
             }
