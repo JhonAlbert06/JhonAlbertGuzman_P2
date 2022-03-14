@@ -3,8 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JhonAlbertGuzman_P2.Entidades
 {
-    public class Productos
+    public class Producidos
     {
+        [Key]
+        public int Id { get; set; }
+        public int ProductoId { get; set; }
+        public int Cantidad { get; set; }
+        public string Descripcion { get; set; }
+        
 
     }
 }
