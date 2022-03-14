@@ -1,3 +1,4 @@
+@inject IToastService toastService
 @page "/R_ProductosEmpaque"
 
 <EditForm Model="productoEmpaque" OnValidSubmit="Guardar">
@@ -107,26 +108,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
-                                    @foreach (var item in productoEmpaque.Producidos)
-                                    {
-                                        @if (this.producto.Descripcion == item.Descripcion)
-                                        {
-                                            <tr>
 
-                                                <td>@producto.ProductoId</td>
-                                                <td>@item.Descripcion</td>
-                                                <td>@item.Cantidad</td>
+                                @foreach (var item in productoEmpaque.Producidos)
+                                {
 
-                                                <td>
-                                                    <span class="btn btn-sm btn-outline-primary oi oi-ban" href="#" @onclick=" (() =>
+                                    <tr>
+
+                                        <td>@producto.ProductoId</td>
+                                        <td>@item.Descripcion</td>
+                                        <td>@item.Cantidad</td>
+
+                                        <td>
+                                            <span class="btn btn-sm btn-outline-primary oi oi-ban" href="#" @onclick=" (() =>
                                                 RemoverFila(item)) "> Remover
-                                                    </span>
-                                                </td>
+                                            </span>
+                                        </td>
 
-                                            </tr>
-                                        }
-                                    }
+                                    </tr>
+                                }
+
                             </tbody>
                         </table>
                     </form>
@@ -210,8 +210,6 @@
 
 </EditForm>
 
-@inject IToastService toastService
-
 @code {
 
     public string Descripcion { get; set; }
@@ -229,6 +227,9 @@
     [Inject]
     public ProductoBLL productosBLL { get; set; }
 
+    [Inject]
+    public ProductoEmpaqueBLL productosEmpaqueBLL { get; set; }
+
     protected override void OnInitialized()
     {
         listaProductos = productosBLL.GetList(t => true);
@@ -236,9 +237,22 @@
 
     public void Buscar()
     {
+        if (this.producto.ProductoId > 0)
+        {
 
+            ProductosEmpaque encontrado = null;
+            encontrado = productosEmpaqueBLL.Buscar(this.productoEmpaque.ProductoId);
+
+            if (encontrado != null)
+            {
+                this.productoEmpaque = encontrado;
+            }
+            else
+            {
+                toastService.ShowError("No se encontró el producto");
+            }
+        }
     }
-    // OJO: hacer migracion y update a la base de datos
     public void AgregarUtilizados()
     {
         this.productoEmpaque.Producidos.Add(producido = new Producido(cantidad, Descripcion));
@@ -269,16 +283,29 @@
 
     public void Nuevo()
     {
-
+        productoEmpaque = new ProductosEmpaque();
     }
 
     public void Guardar()
     {
-
+        if (productosEmpaqueBLL.Guardar(productoEmpaque))
+        {
+            toastService.ShowInfo("Se guardó exitosamente");
+        }
+        else
+            toastService.ShowError("No se pudo guardar.");
     }
     public void Eliminar()
     {
-
+        if (productosBLL.Eliminar(productoEmpaque.ProductoId))
+        {
+            Nuevo();
+            toastService.ShowSuccess("Eliminación exitosa");
+        }
+        else
+        {
+            toastService.ShowError("Eliminación fallida");
+        }
     }
 
     private void RemoverFila(Producido item)
