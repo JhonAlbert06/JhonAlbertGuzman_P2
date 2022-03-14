@@ -35,8 +35,7 @@ namespace JhonAlbertGuzman_P2.Migrations
                     ProductoId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Fecha = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Concepto = table.Column<string>(type: "TEXT", nullable: false),
-                    CantidadUtilizados = table.Column<int>(type: "INTEGER", nullable: false)
+                    Concepto = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,50 +68,79 @@ namespace JhonAlbertGuzman_P2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Producido",
+                name: "Producidos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ProductoEmpaqueId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductoId = table.Column<int>(type: "INTEGER", nullable: false),
                     Cantidad = table.Column<int>(type: "INTEGER", nullable: false),
                     Descripcion = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Producido", x => x.Id);
+                    table.PrimaryKey("PK_Producidos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Producido_ProductosEmpaque_ProductoEmpaqueId",
-                        column: x => x.ProductoEmpaqueId,
+                        name: "FK_Producidos_ProductosEmpaque_ProductoId",
+                        column: x => x.ProductoId,
+                        principalTable: "ProductosEmpaque",
+                        principalColumn: "ProductoId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Utilizados",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ProductoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Cantidad = table.Column<int>(type: "INTEGER", nullable: false),
+                    Descripcion = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Utilizados", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Utilizados_ProductosEmpaque_ProductoId",
+                        column: x => x.ProductoId,
                         principalTable: "ProductosEmpaque",
                         principalColumn: "ProductoId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Producido_ProductoEmpaqueId",
-                table: "Producido",
-                column: "ProductoEmpaqueId");
+                name: "IX_Producidos_ProductoId",
+                table: "Producidos",
+                column: "ProductoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductosDetalle_ProductoId",
                 table: "ProductosDetalle",
+                column: "ProductoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Utilizados_ProductoId",
+                table: "Utilizados",
                 column: "ProductoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Producido");
+                name: "Producidos");
 
             migrationBuilder.DropTable(
                 name: "ProductosDetalle");
 
             migrationBuilder.DropTable(
-                name: "ProductosEmpaque");
+                name: "Utilizados");
 
             migrationBuilder.DropTable(
                 name: "Productos");
+
+            migrationBuilder.DropTable(
+                name: "ProductosEmpaque");
         }
     }
 }
