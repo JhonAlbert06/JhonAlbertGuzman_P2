@@ -8,6 +8,8 @@ namespace JhonAlbertGuzman_P2.DAL
         public DbSet<Productos> Productos { get; set; }
         public DbSet<ProductosDetalle> ProductosDetalle { get; set; }
         public DbSet<ProductosEmpaque> ProductosEmpaque { get; set; }
+        public DbSet<Utilizados> Utilizados { get; set; }
+        public DbSet<Producidos> Producidos { get; set; }
         
         public Contexto(DbContextOptions<Contexto> options) : base(options){}
     }
