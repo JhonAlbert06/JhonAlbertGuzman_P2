@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JhonAlbertGuzman_P2.Entidades
 {
@@ -11,6 +10,16 @@ namespace JhonAlbertGuzman_P2.Entidades
         public int Cantidad { get; set; }
         public string Descripcion { get; set; }
         
+        public Producidos()
+        {
+            Cantidad = 0;
+            Descripcion = null;
+        }
 
+        public Producidos(int cantidad, string descripcion)
+        {
+            Cantidad = cantidad;
+            Descripcion = descripcion;
+        }
     }
 }
