@@ -9,7 +9,6 @@ namespace JhonAlbertGuzman_P2.Entidades
         public int ProductoId { get; set; }
         public int Cantidad { get; set; }
         public string Descripcion { get; set; }
-
         public Utilizados()
         {
             Cantidad = 0;
