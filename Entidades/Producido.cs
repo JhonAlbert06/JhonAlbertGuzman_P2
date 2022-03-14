@@ -13,8 +13,6 @@ namespace JhonAlbertGuzman_P2.Entidades
 
         public Producido()
         {
-            Id = 0;
-            ProductoEmpaqueId = 0;
             Cantidad = 0;
             Descripcion = null;
         }
