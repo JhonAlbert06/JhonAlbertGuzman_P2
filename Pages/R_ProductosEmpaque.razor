@@ -88,7 +88,8 @@
                                 <InputNumber class="form-control" @bind-Value="this.cantidad" />
                                 <ValidationMessage For="@(() => this.cantidad)" />
                             </div>
-
+                            
+                            @* Boton Agregar Utizados *@
                             <div class="form-group col">
                                 <button type="button" class="btn btn-success col" @onclick="AgregarUtilizados">
                                     <span class="oi oi-plus"> Agregar</span>
@@ -109,7 +110,7 @@
                             </thead>
                             <tbody>
 
-                                @foreach (var item in productoEmpaque.Producidos)
+                                @foreach (var item in productoEmpaque.Utilizados)
                                 {
 
                                     <tr>
@@ -220,7 +221,7 @@
 
     public Productos producto { get; set; } = new Productos();
 
-    public Producido producido { get; set; } = new Producido();
+    public Utilizados producido { get; set; } = new Utilizados();
     public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
     public List<Productos> listaProductos { get; set; } = new List<Productos>();
 
@@ -255,30 +256,8 @@
     }
     public void AgregarUtilizados()
     {
-        this.productoEmpaque.Producidos.Add(producido = new Producido(cantidad, Descripcion));
+        this.productoEmpaque.Utilizados.Add(producido = new Utilizados(cantidad, Descripcion));
         CacularPesoTotal(Descripcion, cantidad);
-    }
-
-    public void CacularPesoTotal(string descripcion, int cantidad)
-    {
-        foreach (var item in listaProductos)
-        {
-            if (descripcion == item.Descripcion)
-            {
-                Total += (item.Peso * cantidad);
-            }
-        }
-    }
-
-    public void CacularRestaTotal(string descripcion, int cantidad)
-    {
-        foreach (var item in listaProductos)
-        {
-            if (descripcion == item.Descripcion)
-            {
-                Total = (item.Peso * cantidad);
-            }
-        }
     }
 
     public void Nuevo()
@@ -308,10 +287,35 @@
         }
     }
 
-    private void RemoverFila(Producido item)
+    private void RemoverFila(Utilizados item)
     {
-        this.productoEmpaque.Producidos.Remove(item);
+        this.productoEmpaque.Utilizados.Remove(item);
         CacularRestaTotal(producido.Descripcion, producido.Cantidad);
+    }
+
+    public void CacularPesoTotal(string descripcion, int cantidad)
+    {
+        foreach (var item in listaProductos)
+        {
+            if (descripcion == item.Descripcion)
+            {
+                Total += (item.Peso * cantidad);
+            }
+        }
+    }
+
+    public void CacularRestaTotal(string descripcion, int cantidad)
+    {
+        foreach (var item in listaProductos)
+        {
+            if (descripcion == item.Descripcion)
+            {
+                double resta = (item.Peso * cantidad);
+                double auxiliar = Total - resta;
+                Total = auxiliar;
+                resta = 0;
+            }
+        }
     }
 
 }
