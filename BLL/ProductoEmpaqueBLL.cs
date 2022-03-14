@@ -16,7 +16,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
        public bool Guardar(ProductosEmpaque producto)
         {
-            if (!Existe(producto.Concepto))
+            if (!Existe(producto.ProductoId))
                 return Insertar(producto);
             else
                 return Modificar(producto);
@@ -91,7 +91,9 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                producto = _contexto.ProductosEmpaque.Include(x => x.Utilizados)
+                producto = _contexto.ProductosEmpaque
+                .Include(u => u.Utilizados)
+                .Include(x => x.Producidos)
                 .Where(p => p.ProductoId == Id)
                 .SingleOrDefault();
             }
