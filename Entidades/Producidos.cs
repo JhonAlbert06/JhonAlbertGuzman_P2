@@ -1,23 +1,22 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JhonAlbertGuzman_P2.Entidades
 {
-    public class Producido
+    public class Producidos
     {
         [Key]
         public int Id { get; set; }
-        public int ProductoEmpaqueId { get; set; }
+        public int ProductoId { get; set; }
         public int Cantidad { get; set; }
         public string Descripcion { get; set; }
-
-        public Producido()
+        
+        public Producidos()
         {
             Cantidad = 0;
             Descripcion = null;
         }
 
-        public Producido(int cantidad, string descripcion)
+        public Producidos(int cantidad, string descripcion)
         {
             Cantidad = cantidad;
             Descripcion = descripcion;

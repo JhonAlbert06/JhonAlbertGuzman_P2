@@ -3,6 +3,7 @@ using System;
 using JhonAlbertGuzman_P2.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,14 +11,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JhonAlbertGuzman_P2.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20220314124338_segundo")]
+    partial class segundo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.2");
 
-            modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Producidos", b =>
+            modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Producido", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,14 +32,14 @@ namespace JhonAlbertGuzman_P2.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProductoId")
+                    b.Property<int>("ProductoEmpaqueId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductoId");
+                    b.HasIndex("ProductoEmpaqueId");
 
-                    b.ToTable("Producidos");
+                    b.ToTable("Producido");
                 });
 
             modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Productos", b =>
@@ -114,6 +116,9 @@ namespace JhonAlbertGuzman_P2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CantidadUtilizados")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Concepto")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -126,34 +131,11 @@ namespace JhonAlbertGuzman_P2.Migrations
                     b.ToTable("ProductosEmpaque");
                 });
 
-            modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Utilizados", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ProductoId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductoId");
-
-                    b.ToTable("Utilizados");
-                });
-
-            modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Producidos", b =>
+            modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Producido", b =>
                 {
                     b.HasOne("JhonAlbertGuzman_P2.Entidades.ProductosEmpaque", null)
                         .WithMany("Producidos")
-                        .HasForeignKey("ProductoId")
+                        .HasForeignKey("ProductoEmpaqueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -167,15 +149,6 @@ namespace JhonAlbertGuzman_P2.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Utilizados", b =>
-                {
-                    b.HasOne("JhonAlbertGuzman_P2.Entidades.ProductosEmpaque", null)
-                        .WithMany("Utilizados")
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Productos", b =>
                 {
                     b.Navigation("Detalle");
@@ -184,8 +157,6 @@ namespace JhonAlbertGuzman_P2.Migrations
             modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.ProductosEmpaque", b =>
                 {
                     b.Navigation("Producidos");
-
-                    b.Navigation("Utilizados");
                 });
 #pragma warning restore 612, 618
         }

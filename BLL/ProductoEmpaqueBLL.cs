@@ -16,7 +16,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
        public bool Guardar(ProductosEmpaque producto)
         {
-            if (!Existe(producto.Concepto))
+            if (!Existe(producto.ProductoId))
                 return Insertar(producto);
             else
                 return Modificar(producto);
@@ -47,7 +47,7 @@ namespace JhonAlbertGuzman_P2.BLL
             {
                 _contexto.Database.ExecuteSqlRaw($"DELETE FROM ProductosEmpaque WHERE ProductoId={producto.ProductoId}");
 
-                foreach (var Anterior in producto.Producidos)
+                foreach (var Anterior in producto.Utilizados)
                 {
                     _contexto.Entry(Anterior).State = EntityState.Added;
                 }
@@ -91,7 +91,9 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                producto = _contexto.ProductosEmpaque.Include(x => x.Producidos)
+                producto = _contexto.ProductosEmpaque
+                .Include(u => u.Utilizados)
+                .Include(x => x.Producidos)
                 .Where(p => p.ProductoId == Id)
                 .SingleOrDefault();
             }

@@ -85,10 +85,11 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="this.cantidad" />
-                                <ValidationMessage For="@(() => this.cantidad)" />
+                                <InputNumber class="form-control" @bind-Value="CantidadUtilizado" />
+                                <ValidationMessage For="@(() => CantidadUtilizado)" />
                             </div>
-
+                            
+                            @* Boton Agregar Utizados *@
                             <div class="form-group col">
                                 <button type="button" class="btn btn-success col" @onclick="AgregarUtilizados">
                                     <span class="oi oi-plus"> Agregar</span>
@@ -109,12 +110,12 @@
                             </thead>
                             <tbody>
 
-                                @foreach (var item in productoEmpaque.Producidos)
+                                @foreach (var item in productoEmpaque.Utilizados)
                                 {
 
                                     <tr>
 
-                                        <td>@producto.ProductoId</td>
+                                        <td>@item.ProductoId</td>
                                         <td>@item.Descripcion</td>
                                         <td>@item.Cantidad</td>
 
@@ -160,21 +161,27 @@
                             @* Combo BOX Productos *@
                             <div class="form-group col">
 
-                                <label>Productos: </label>
+                                <label>Productos Creados: </label>
 
-                                <select class="form-select col">
-                                    <option selected>Productos</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
+                                <InputSelect id="SelectProductos" @bind-Value="ProductosCreados" class="form-control">
+
+                                    <option></option>
+                                    
+                                    @foreach (var item in listaCreados)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+
+                                    <option value="Mixtas">Mixtas</option>
+
+                                </InputSelect>
                             </div>
 
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadUtilizados" />
-                                <ValidationMessage For="@(() => productoEmpaque.CantidadUtilizados)" />
+                                <InputNumber class="form-control" @bind-Value="CantidadProducido" />
+                                <ValidationMessage For="@(() => CantidadProducido)" />
                             </div>
 
                         </div>
@@ -213,14 +220,13 @@
 @code {
 
     public string Descripcion { get; set; }
-    public int cantidad { get; set; } = 0;
-
-
+    public int CantidadUtilizado { get; set; } = 0;
+    public int CantidadProducido { get; set; } = 0;
+    public string ProductosCreados { get; set; }
     public double Total { get; set; } = 0;
-
     public Productos producto { get; set; } = new Productos();
-
-    public Producido producido { get; set; } = new Producido();
+    public Utilizados utilizado { get; set; } = new Utilizados();
+    public Producidos producido { get; set; } = new Producidos();
     public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
     public List<Productos> listaProductos { get; set; } = new List<Productos>();
 
@@ -253,33 +259,6 @@
             }
         }
     }
-    public void AgregarUtilizados()
-    {
-        this.productoEmpaque.Producidos.Add(producido = new Producido(cantidad, Descripcion));
-        CacularPesoTotal(Descripcion, cantidad);
-    }
-
-    public void CacularPesoTotal(string descripcion, int cantidad)
-    {
-        foreach (var item in listaProductos)
-        {
-            if (descripcion == item.Descripcion)
-            {
-                Total += (item.Peso * cantidad);
-            }
-        }
-    }
-
-    public void CacularRestaTotal(string descripcion, int cantidad)
-    {
-        foreach (var item in listaProductos)
-        {
-            if (descripcion == item.Descripcion)
-            {
-                Total = (item.Peso * cantidad);
-            }
-        }
-    }
 
     public void Nuevo()
     {
@@ -288,6 +267,7 @@
 
     public void Guardar()
     {
+        AgregarProducido();
         if (productosEmpaqueBLL.Guardar(productoEmpaque))
         {
             toastService.ShowInfo("Se guardó exitosamente");
@@ -308,10 +288,48 @@
         }
     }
 
-    private void RemoverFila(Producido item)
+    private void RemoverFila(Utilizados item)
     {
-        this.productoEmpaque.Producidos.Remove(item);
-        CacularRestaTotal(producido.Descripcion, producido.Cantidad);
+        this.productoEmpaque.Utilizados.Remove(item);
+        CacularRestaTotal(item.Descripcion, item.Cantidad);
+    }
+
+    public void AgregarUtilizados()
+    {
+        this.productoEmpaque.Utilizados.Add(utilizado = new Utilizados(CantidadUtilizado, Descripcion));
+        CacularPesoTotal(Descripcion, CantidadUtilizado);
+        LlenarLista(Descripcion);
+    }
+    public void AgregarProducido()
+    {
+        this.productoEmpaque.Producidos.Add(producido = new Producidos(CantidadProducido, ProductosCreados));
+    }
+    public void CacularPesoTotal(string descripcion, int cantidad)
+    {
+        foreach (var item in listaProductos)
+        {
+            if (descripcion == item.Descripcion)
+            {
+                Total += (item.Peso * cantidad);
+            }
+        }
+    }
+
+    public void CacularRestaTotal(string descripcion, int cantidad)
+    {
+        foreach (var item in listaProductos)
+        {
+            if (descripcion == item.Descripcion)
+            {
+                
+            }
+        }
+    }
+
+    public List<string> listaCreados = new List<string>();
+    public void LlenarLista(string descripcion)
+    {
+        listaCreados.Add(descripcion);
     }
 
 }
