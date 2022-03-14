@@ -65,7 +65,8 @@
                     <form>
 
                         <div class="row align-items-end">
-
+                            
+                            @* ComboBox Productos *@
                             <div class="form-group col">
                                 <label>Productos: </label>
                                 <InputSelect id="SelectProductos" @bind-Value="Descripcion" class="form-control">
@@ -76,6 +77,7 @@
                                     {
                                         <option value="@item.Descripcion">@item.Descripcion</option>
                                     }
+
                                 </InputSelect>
                             </div>
 
@@ -107,21 +109,19 @@
                             <tbody>
                                 @foreach (var item in productoEmpaque.Producidos)
                                 {
-                                    
-                                        <tr>
+                                    <tr>
 
-                                            <td>@item.ProductoEmpaqueId</td>
-                                            <td>@item.Descripcion</td>
-                                            <td>@item.Cantidad</td>
+                                        <td>@item.ProductoEmpaqueId</td>
+                                        <td>@item.Descripcion</td>
+                                        <td>@item.Cantidad</td>
 
-                                            <td>
-                                                <span class="btn btn-sm btn-outline-primary oi oi-ban" href="#" @onclick=" (() =>
-                                                    RemoverFila(item)) "> Remover
-                                                </span>
-                                            </td>
+                                        <td>
+                                            <span class="btn btn-sm btn-outline-primary oi oi-ban" href="#" @onclick=" (() =>
+                                                RemoverFila(item)) "> Remover
+                                            </span>
+                                        </td>
 
-                                        </tr>
-                                
+                                    </tr>                                
                                 }
                             </tbody>
                         </table>
@@ -169,8 +169,8 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="this.cantidad" />
-                                <ValidationMessage For="@(() => this.cantidad)" />
+                                <InputNumber class="form-control" @bind-Value="productoEmpaque.CantidadUtilizados"/>
+                                <ValidationMessage For="@(() => productoEmpaque.CantidadUtilizados)" />
                             </div>
 
                         </div>
@@ -217,9 +217,7 @@
     public double Total { get; set; } = 0;
     
     public Producido producido { get; set; } = new Producido();
-    public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
-    
-    public Productos producto { get; set; } = new Productos();
+    public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();    
     public List<Productos> listaProductos { get; set; } = new List<Productos>();
 
     [Inject]
