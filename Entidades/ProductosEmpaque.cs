@@ -18,7 +18,7 @@ namespace JhonAlbertGuzman_P2.Entidades
         public int CantidadUtilizados { get; set; }
 
         [ForeignKey("ProductoEmpaqueId")]
-        public List<Producido> Producidos { get; set; } = new List<Producido>();
+        public List<Utilizados> Utilizados { get; set; } = new List<Utilizados>();
 
     }
 }
