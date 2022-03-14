@@ -84,6 +84,13 @@
                         <InputDate class="form-control" @bind-Value="@producto.Fecha" />
                         <ValidationMessage For="@(() => producto.Fecha)" />
                     </div>
+
+                    @* Peso *@    
+                    <div class="form-group col">
+                        <label>Peso en Gramos: </label>
+                        <InputNumber class="form-control" @bind-Value="@producto.Peso" />
+                        <ValidationMessage For="@(() => producto.Peso)" />
+                    </div>
                 </div>
 
                 <hr>
