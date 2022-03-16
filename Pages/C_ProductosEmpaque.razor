@@ -47,6 +47,7 @@
                     <th>Utilizado Cantidad</th>
                     <th>Producido Descripcion</th>
                     <th>Producido Cantidad</th>
+                    <th>Fecha Expiracion</th>
                 </tr>
             </thead>
 
@@ -66,6 +67,7 @@
                                     <td>@itemUtilizado.Cantidad</td>
                                     <td>@itemProducido.Descripcion</td>
                                     <td>@itemProducido.Cantidad</td>
+                                    <td>@itemEmpaque.Fecha?.ToString("dd/MM/yyyy")</td>
                                 </tr>
                             }
                         }
