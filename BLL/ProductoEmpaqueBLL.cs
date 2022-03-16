@@ -17,9 +17,14 @@ namespace JhonAlbertGuzman_P2.BLL
        public bool Guardar(ProductosEmpaque producto)
         {
             if (!Existe(producto.ProductoId))
+            {
+                
                 return Insertar(producto);
+            }
             else
+            {
                 return Modificar(producto);
+            }
         }
 
         private bool Insertar(ProductosEmpaque producto)
@@ -104,7 +109,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                paso = _contexto.ProductosEmpaque.Any(p => p.Concepto == descripcion);
+                paso = _contexto.ProductosEmpaque.AsNoTracking().Any(p => p.Concepto == descripcion);
             }
             catch (Exception)
             {
@@ -120,7 +125,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                paso = _contexto.ProductosEmpaque.Any(p => p.ProductoId == Id);
+                paso = _contexto.ProductosEmpaque.AsNoTracking().Any(p => p.ProductoId == Id);
             }
             catch (Exception)
             {
@@ -136,7 +141,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                lista = _contexto.ProductosEmpaque.Where(critero).ToList();
+                lista = _contexto.ProductosEmpaque.Where(critero).Include(u => u.Utilizados).Include(p => p.Producidos).AsNoTracking().ToList();
             }
             catch (Exception)
             {
@@ -151,7 +156,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                lista = _contexto.Utilizados.Where(critero).ToList();
+                lista = _contexto.Utilizados.Where(critero).AsNoTracking().ToList();
             }
             catch (Exception)
             {
@@ -167,7 +172,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                lista = _contexto.Producidos.Where(critero).ToList();
+                lista = _contexto.Producidos.Where(critero).AsNoTracking().ToList();
             }
             catch (Exception)
             {
