@@ -88,7 +88,7 @@
                                 <InputNumber class="form-control" @bind-Value="CantidadUtilizado" />
                                 <ValidationMessage For="@(() => CantidadUtilizado)" />
                             </div>
-                            
+
                             @* Boton Agregar Utizados *@
                             <div class="form-group col">
                                 <button type="button" class="btn btn-success col" @onclick="AgregarUtilizados">
@@ -166,14 +166,17 @@
                                 <InputSelect id="SelectProductos" @bind-Value="ProductosCreados" class="form-control">
 
                                     <option></option>
-                                    
+
                                     @foreach (var item in listaCreados)
                                     {
                                         <option value="@item">@item</option>
                                     }
 
-                                    <option value="Mixtas">Mixtas</option>
-
+                                    @if (indice > 1)
+                                    {
+                                        <option value="Mixtas">Mixtas</option>
+                                    }
+                                    
                                 </InputSelect>
                             </div>
 
@@ -223,7 +226,7 @@
     public string Descripcion { get; set; }
     public int CantidadUtilizado { get; set; } = 0;
     public int CantidadProducido { get; set; } = 0;
-    public string ProductosCreados { get; set; }
+    public string? ProductosCreados { get; set; }
     public double Total { get; set; } = 0;
     public Productos producto { get; set; } = new Productos();
     public Utilizados utilizado { get; set; } = new Utilizados();
@@ -332,10 +335,13 @@
     }
 
     public List<string> listaCreados = new List<string>();
+    public int indice { get; set; } = 0;
+
     public void LlenarLista(string descripcion)
     {
         listaCreados.Add(descripcion);
         Mixto += @"{descripcion}";
+        indice++;
     }
 
     public void RestaInvetarios(int cantidad)
