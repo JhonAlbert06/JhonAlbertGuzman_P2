@@ -98,11 +98,15 @@
             switch (Filtro)
             {
                 case "1":
-                    @* lista = productosBLL.GetListDetalle(t => t.ProductoId == int.Parse(Criterio)); *@
+                    empaque = productosEmpaqueBLL.GetListEmpaque(t => t.ProductoId == int.Parse(Criterio));
+                    utilizados = productosEmpaqueBLL.GetListUtilizado(t => t.ProductoId == int.Parse(Criterio));
+                    producido = productosEmpaqueBLL.GetListProducidos(t => t.ProductoId == int.Parse(Criterio));
                 break;
 
                 case "2":
-                    @* lista = productosBLL.GetListDetalle(t => t.Presentacion.ToLower().Contains(Criterio.ToLower())); *@
+                    empaque = productosEmpaqueBLL.GetListEmpaque(t => t.Concepto.ToLower().Contains(Criterio.ToLower()));
+                    utilizados = productosEmpaqueBLL.GetListUtilizado(t => t.Descripcion.ToLower().Contains(Criterio.ToLower()));
+                    producido = productosEmpaqueBLL.GetListProducidos(t => t.Descripcion.ToLower().Contains(Criterio.ToLower()));
                 break;
 
             }
