@@ -17,9 +17,14 @@ namespace JhonAlbertGuzman_P2.BLL
        public bool Guardar(ProductosEmpaque producto)
         {
             if (!Existe(producto.ProductoId))
+            {
+                
                 return Insertar(producto);
+            }
             else
+            {
                 return Modificar(producto);
+            }
         }
 
         private bool Insertar(ProductosEmpaque producto)
