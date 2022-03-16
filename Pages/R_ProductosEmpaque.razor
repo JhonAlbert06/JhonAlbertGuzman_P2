@@ -282,7 +282,7 @@
     
     public void Eliminar()
     {
-        if (productosBLL.Eliminar(productoEmpaque.ProductoId))
+        if (productosEmpaqueBLL.Eliminar(productoEmpaque.ProductoId))
         {
             Nuevo();
             toastService.ShowSuccess("Eliminación exitosa");
