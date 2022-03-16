@@ -72,8 +72,8 @@
                         <td>@item.Existencia</td>
                         <td>RD$ @item.Costo</td>
                         <td>RD$ @item.ValorInventario</td>
-                        <td>@item.Fecha</td> @* .ToString("dd/MM/yyyy") *@
-                        <td><a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Productos/@item.ProductoId">Ver</a>
+                        <td>@item.Fecha?.ToString("dd/MM/yyyy")</td>
+                        <td><a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Productos/@item.ProductoId"> Ver</a>
                         </td>
                     </tr>
                 }
@@ -91,6 +91,7 @@
     public string Criterio { get; set; }
     public DateTime? Desde { get; set; } = null;
     public DateTime? Hasta { get; set; } = null;
+    public Productos producto { get; set; } = new Productos();
     public List<Productos> lista { get; set; } = new List<Productos>();
 
     [Inject]
