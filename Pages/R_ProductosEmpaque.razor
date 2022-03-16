@@ -271,7 +271,9 @@
 
     public void Guardar()
     {
+        RestaInvetarios();
         AgregarProducido();
+        
         if (productosEmpaqueBLL.Guardar(productoEmpaque))
         {
             toastService.ShowInfo("Se guardó exitosamente");
@@ -282,6 +284,7 @@
     
     public void Eliminar()
     {
+        SumaInventario();
         if (productosEmpaqueBLL.Eliminar(productoEmpaque.ProductoId))
         {
             Nuevo();
@@ -297,14 +300,12 @@
     {
         this.productoEmpaque.Utilizados.Remove(item);
         CacularRestaTotal(item.Descripcion, item.Cantidad);
-        @* SumaInventario(item.Cantidad); *@
     }
 
     public void AgregarUtilizados()
     {
         this.productoEmpaque.Utilizados.Add(utilizado = new Utilizados(CantidadUtilizado, Descripcion));
         CacularPesoTotal(Descripcion, CantidadUtilizado);
-        @* RestaInvetarios(CantidadUtilizado); *@
         LlenarLista(Descripcion);
     }
 
@@ -345,16 +346,34 @@
         listaCreados.Add(descripcion);
         Mixto += @"{descripcion}";
         indice++;
-    }
-@* 
-    public void RestaInvetarios(int cantidad)
-    {
-        producto.Existencia -= cantidad;
+    } 
+ 
+    public void RestaInvetarios()
+    {   
+        var auxiliar = productosBLL.Buscar(producto.ProductoId);
+
+        if (auxiliar != null)
+        {
+            this.producto = auxiliar;
+            producto.Existencia -= utilizado.Cantidad;
+            producto.Ganancia = ((producto.Precio - producto.Costo) * 100 ) / producto.Costo;
+            producto.ValorInventario = producto.Existencia * producto.Costo;
+            productosBLL.ModificarInventario(producto);
+        }
     }
 
-    public void SumaInventario(int cantidad)
+    public void SumaInventario()
     {
-        producto.Existencia += cantidad;
+        var auxiliar = productosBLL.Buscar(producto.ProductoId);
+
+        if (auxiliar != null)
+        {
+            this.producto = auxiliar;
+            producto.Existencia += utilizado.Cantidad;
+            producto.Ganancia = ((producto.Precio - producto.Costo) * 100 ) / producto.Costo;
+            producto.ValorInventario = producto.Existencia * producto.Costo;
+            productosBLL.ModificarInventario(producto);
+        }
     }
-*@
+
 }
