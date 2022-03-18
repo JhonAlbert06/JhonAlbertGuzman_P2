@@ -15,10 +15,11 @@ namespace JhonAlbertGuzman_P2.Entidades
             Descripcion = null;
         }
 
-        public Utilizados(int cantidad, string descripcion)
+        public Utilizados(int cantidad, string descripcion, int id)
         {
             Cantidad = cantidad;
             Descripcion = descripcion;
+            ProductoId = id;
         }
     }
 }

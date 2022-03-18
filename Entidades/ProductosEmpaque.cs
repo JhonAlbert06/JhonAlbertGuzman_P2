@@ -4,7 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace JhonAlbertGuzman_P2.Entidades
 {
     public class ProductosEmpaque
-    {
+    {       
+     
         [Key]
         [Range(0, int.MaxValue, ErrorMessage = "El ID debe estar en el rango de {1} y {2}.")]
         public int ProductoId { get; set; }

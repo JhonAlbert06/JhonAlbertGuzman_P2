@@ -20,6 +20,7 @@ namespace JhonAlbertGuzman_P2.Entidades
         [Required(ErrorMessage = "El Costo no puede estar vacio...")]
         [Range(1, double.MaxValue, ErrorMessage = "El Costo debe estar en el rango de {1} y {2}.")]
         public double Costo { get; set; }
+        public double Precio { get; set; }
         public double ValorInventario { get; set; }
         public double Ganancia { get; set; }
         public DateTime? Fecha { get; set; }

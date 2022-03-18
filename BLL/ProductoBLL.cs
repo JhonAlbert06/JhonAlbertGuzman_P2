@@ -134,6 +134,24 @@ namespace JhonAlbertGuzman_P2.BLL
 
             return paso;
         }
+
+        public Productos ExisteProducto(string descripcion)
+        {
+            Productos producto;
+
+            try
+            {
+                producto = _contexto.Productos
+                .Where(p => p.Descripcion == descripcion)
+                .SingleOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return producto;
+        }
         
         public List<Productos> GetList(Expression<Func<Productos, bool>> critero)
         {
@@ -166,6 +184,30 @@ namespace JhonAlbertGuzman_P2.BLL
 
             return lista;
 
+        }
+
+        public bool ModificarInventario(Productos producto)
+        {
+            bool paso = false;
+
+            try
+            {
+                _contexto.Database.ExecuteSqlRaw($"DELETE FROM ProductosDetalle WHERE ProductoId={producto.ProductoId}");
+
+                foreach (var Anterior in producto.Detalle)
+                {
+                    _contexto.Entry(Anterior).State = EntityState.Added;
+                }
+
+                _contexto.Entry(producto).State = EntityState.Modified;
+
+                paso = _contexto.SaveChanges() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return paso;
         }
         
     }

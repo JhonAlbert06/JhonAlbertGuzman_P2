@@ -16,10 +16,11 @@ namespace JhonAlbertGuzman_P2.Entidades
             Descripcion = null;
         }
 
-        public Producidos(int cantidad, string descripcion)
+        public Producidos(int cantidad, string descripcion, int id)
         {
             Cantidad = cantidad;
             Descripcion = descripcion;
+            ProductoId = id;
         }
     }
 }

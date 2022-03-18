@@ -58,6 +58,7 @@
                     <th>Descripción</th>
                     <th>Existencia</th>
                     <th>Costo</th>
+                    <th>Peso</th>
                     <th>Valor Inventario</th>
                     <th>Fecha Expiracion</th>
                 </tr>
@@ -71,6 +72,7 @@
                         <td>@item.Descripcion</td>
                         <td>@item.Existencia</td>
                         <td>RD$ @item.Costo</td>
+                        <td>@item.Peso Gramos</td>
                         <td>RD$ @item.ValorInventario</td>
                         <td>@item.Fecha?.ToString("dd/MM/yyyy")</td>
                         <td><a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Productos/@item.ProductoId"> Ver</a>
