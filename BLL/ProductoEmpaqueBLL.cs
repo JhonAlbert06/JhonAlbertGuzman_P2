@@ -90,10 +90,11 @@ namespace JhonAlbertGuzman_P2.BLL
             try
             {
                 producto = _contexto.ProductosEmpaque
-                .Include(u => u.Utilizados)
-                .Include(x => x.Producidos)
-                .Where(p => p.ProductoId == Id)
-                .SingleOrDefault();
+                    .Include(u => u.Utilizados)
+                    .Include(x => x.Producidos)
+                    .Where(p => p.ProductoId == Id)
+                    .AsNoTracking()
+                    .SingleOrDefault();
             }
             catch (Exception)
             {
