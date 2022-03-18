@@ -134,6 +134,24 @@ namespace JhonAlbertGuzman_P2.BLL
 
             return paso;
         }
+
+        public Productos ExisteProducto(string descripcion)
+        {
+            Productos producto;
+
+            try
+            {
+                producto = _contexto.Productos
+                .Where(p => p.Descripcion == descripcion)
+                .SingleOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return producto;
+        }
         
         public List<Productos> GetList(Expression<Func<Productos, bool>> critero)
         {
