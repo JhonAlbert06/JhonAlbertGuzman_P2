@@ -113,7 +113,7 @@ namespace JhonAlbertGuzman_P2.Migrations
 
             modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.ProductosEmpaque", b =>
                 {
-                    b.Property<int>("ProductoId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -124,7 +124,10 @@ namespace JhonAlbertGuzman_P2.Migrations
                     b.Property<DateTime?>("Fecha")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ProductoId");
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
 
                     b.ToTable("ProductosEmpaque");
                 });
