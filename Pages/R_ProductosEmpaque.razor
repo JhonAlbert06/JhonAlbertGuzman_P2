@@ -305,7 +305,9 @@
 
     public void AgregarUtilizados()
     {
-        this.productoEmpaque.Utilizados.Add(utilizado = new Utilizados(CantidadUtilizado, Descripcion));
+        var aux = productosBLL.ExisteProducto(Descripcion);
+
+        this.productoEmpaque.Utilizados.Add(utilizado = new Utilizados(CantidadUtilizado, Descripcion, aux.ProductoId));
         CacularPesoTotal(Descripcion, CantidadUtilizado);
         LlenarLista(Descripcion);
         LlenarListaId(Descripcion);
@@ -313,7 +315,8 @@
 
     public void AgregarProducido()
     {
-        this.productoEmpaque.Producidos.Add(producido = new Producidos(CantidadProducido, ProductosCreados));
+        var aux = productosBLL.ExisteProducto(Descripcion);
+        this.productoEmpaque.Producidos.Add(producido = new Producidos(CantidadProducido, ProductosCreados, aux.ProductoId));
     }
 
     public void CacularPesoTotal(string descripcion, int cantidad)
