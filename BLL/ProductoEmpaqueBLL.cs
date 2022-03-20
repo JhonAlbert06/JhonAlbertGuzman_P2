@@ -142,7 +142,7 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                lista = _contexto.ProductosEmpaque.Where(critero).Include(u => u.Utilizados).Include(p => p.Producidos).AsNoTracking().ToList();
+                lista = _contexto.ProductosEmpaque.Where(critero).AsNoTracking().ToList();
             }
             catch (Exception)
             {
