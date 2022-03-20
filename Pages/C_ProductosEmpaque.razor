@@ -18,7 +18,7 @@
 
                 <div class="input-group d-flex align-items-end">
                     <select class="form-control col-2" @bind="Filtro">
-                        <option value="0"></option>
+                        <option></option>
                         <option value="1">Id</option>
                         <option value="2">Concepto</option>
                     </select>
@@ -43,10 +43,10 @@
                 <tr class="table-info">
                     <th>Producto Id</th>
                     <th>Concepto</th>
-                    <th>Utilizado Descripcion</th>
-                    <th>Utilizado Cantidad</th>
-                    <th>Producido Descripcion</th>
-                    <th>Producido Cantidad</th>
+                    <th>Utilizado</th>
+                    <th>Cantidad</th>
+                    <th>Producido</th>
+                    <th> Cantidad</th>
                     <th>Fecha Expiracion</th>
                 </tr>
             </thead>
@@ -58,18 +58,20 @@
                     {
                         @foreach (var itemProducido in producido)
                         {
-                            if (itemEmpaque.ProductoId == itemUtilizado.ProductoId && itemEmpaque.ProductoId == itemProducido.ProductoId)
-                            {
-                                <tr>
-                                    <td>@itemEmpaque.ProductoId</td>
-                                    <td>@itemEmpaque.Concepto</td>
-                                    <td>@itemUtilizado.Descripcion</td>
-                                    <td>@itemUtilizado.Cantidad</td>
-                                    <td>@itemProducido.Descripcion</td>
-                                    <td>@itemProducido.Cantidad</td>
-                                    <td>@itemEmpaque.Fecha?.ToString("dd/MM/yyyy")</td>
-                                </tr>
-                            }
+
+                            <tr>
+                                <td>@itemEmpaque.ProductoId</td>
+                                <td>@itemEmpaque.Concepto</td>
+
+                                <td>@itemUtilizado.Descripcion</td>
+                                <td>@itemUtilizado.Cantidad</td>
+
+                                <td>@itemProducido.Descripcion</td>
+                                <td>@itemProducido.Cantidad</td>
+
+                                <td>@itemEmpaque.Fecha?.ToString("dd/MM/yyyy")</td>
+                            </tr>
+
                         }
                     }
                 }
@@ -85,7 +87,7 @@
 @code {
 
     public string Filtro { get; set; }
-    public string Criterio { get; set; }
+    public string? Criterio { get; set; }
     public List<ProductosEmpaque> empaque { get; set; } = new List<ProductosEmpaque>();
     public List<Producidos> producido { get; set; } = new List<Producidos>();
     public List<Utilizados> utilizados { get; set; } = new List<Utilizados>();
@@ -101,8 +103,8 @@
             {
                 case "1":
                     empaque = productosEmpaqueBLL.GetListEmpaque(t => t.ProductoId == int.Parse(Criterio));
-                    utilizados = productosEmpaqueBLL.GetListUtilizado(t => t.ProductoId == int.Parse(Criterio));
-                    producido = productosEmpaqueBLL.GetListProducidos(t => t.ProductoId == int.Parse(Criterio));
+                    utilizados = productosEmpaqueBLL.GetListUtilizado(t => t.Id == int.Parse(Criterio));
+                    producido = productosEmpaqueBLL.GetListProducidos(t => t.Id == int.Parse(Criterio));
                 break;
 
                 case "2":
