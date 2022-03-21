@@ -115,7 +115,7 @@
 
                                     <tr>
 
-                                        <td>@item.ProductoId</td>
+                                        <td>@item.Id</td>
                                         <td>@item.Descripcion</td>
                                         <td>@item.Cantidad</td>
 
@@ -349,7 +349,7 @@
     public void LlenarLista(string descripcion)
     {
         listaCreados.Add(descripcion);
-        Mixto += @"{descripcion}";
+        @* Mixto += @"{descripcion}"; *@
         indice++;
     }
 
