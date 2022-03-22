@@ -14,26 +14,28 @@ namespace JhonAlbertGuzman_P2.BLL
            _contexto = contexto;
        } 
 
-       public bool Guardar(ProductosEmpaque producto)
+       public bool Guardar(ProductosEmpaque empaque)
         {
-            if (!Existe(producto.ProductoId))
+            if (!Existe(empaque.EmpaqueId))
             {
                 
-                return Insertar(producto);
+                return Insertar(empaque);
             }
             else
             {
-                return Modificar(producto);
+                return Modificar(empaque);
             }
         }
 
-        private bool Insertar(ProductosEmpaque producto)
+        // editar este para que controle el inventario y la manera de agregar productos 
+        // se deben recorrer
+        private bool Insertar(ProductosEmpaque empaque)
         {
             bool paso = false;
 
             try
             {
-                _contexto.ProductosEmpaque.Add(producto).State = EntityState.Added;
+                _contexto.ProductosEmpaque.Add(empaque).State = EntityState.Added;
                 paso = _contexto.SaveChanges() > 0;
             }
             catch (Exception)
@@ -44,13 +46,13 @@ namespace JhonAlbertGuzman_P2.BLL
             return paso;
         }
 
-        private bool Modificar(ProductosEmpaque producto)
+        private bool Modificar(ProductosEmpaque empaque)
         {
             bool paso = false;
 
             try
             {
-                _contexto.ProductosEmpaque.Update(producto);
+                _contexto.ProductosEmpaque.Update(empaque);
                 paso = _contexto.SaveChanges() > 0;
             }
             catch (Exception)
@@ -85,14 +87,13 @@ namespace JhonAlbertGuzman_P2.BLL
 
         public ProductosEmpaque Buscar(int Id)
         {
-            ProductosEmpaque producto;
+            ProductosEmpaque empaque;
 
             try
             {
-                producto = _contexto.ProductosEmpaque
+                empaque = _contexto.ProductosEmpaque
                     .Include(u => u.Utilizados)
-                    .Include(x => x.Producidos)
-                    .Where(p => p.ProductoId == Id)
+                    .Where(p => p.EmpaqueId == Id)
                     .AsNoTracking()
                     .SingleOrDefault();
             }
@@ -101,7 +102,7 @@ namespace JhonAlbertGuzman_P2.BLL
                 throw;
             }
 
-            return producto;
+            return empaque;
         }
 
         public bool Existe(string descripcion)
@@ -110,7 +111,9 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                paso = _contexto.ProductosEmpaque.AsNoTracking().Any(p => p.Concepto == descripcion);
+                paso = _contexto.ProductosEmpaque
+                    .AsNoTracking()
+                    .Any(p => p.Concepto == descripcion);
             }
             catch (Exception)
             {
@@ -126,7 +129,9 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                paso = _contexto.ProductosEmpaque.AsNoTracking().Any(p => p.ProductoId == Id);
+                paso = _contexto.ProductosEmpaque
+                    .AsNoTracking()
+                    .Any(p => p.EmpaqueId == Id);
             }
             catch (Exception)
             {
@@ -142,22 +147,10 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                lista = _contexto.ProductosEmpaque.Where(critero).AsNoTracking().ToList();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            return lista;
-        }
-        public List<Utilizados> GetListUtilizado(Expression<Func<Utilizados, bool>> critero)
-        {
-            List<Utilizados> lista = new List<Utilizados>();
-
-            try
-            {
-                lista = _contexto.Utilizados.Where(critero).AsNoTracking().ToList();
+                lista = _contexto.ProductosEmpaque
+                    .Where(critero)
+                    .AsNoTracking()
+                    .ToList();
             }
             catch (Exception)
             {
@@ -167,20 +160,6 @@ namespace JhonAlbertGuzman_P2.BLL
             return lista;
         }
 
-        public List<Producidos> GetListProducidos(Expression<Func<Producidos, bool>> critero)
-        {
-            List<Producidos> lista = new List<Producidos>();
 
-            try
-            {
-                lista = _contexto.Producidos.Where(critero).AsNoTracking().ToList();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            return lista;
-        }
     }
 }
