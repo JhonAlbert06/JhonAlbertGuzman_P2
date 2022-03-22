@@ -96,19 +96,19 @@
             switch (Filtro)
             {
                 case "1":
-                    lista = productosBLL.GetListDetalle(t => t.ProductoId == int.Parse(Criterio));
+                    //lista = productosBLL.GetListDetalle(t => t.ProductoId == int.Parse(Criterio));
                     break;
 
                 case "2":
-                    lista = productosBLL.GetListDetalle(t => t.Presentacion.ToLower().Contains(Criterio.ToLower()));
+                    //lista = productosBLL.GetListDetalle(t => t.Presentacion.ToLower().Contains(Criterio.ToLower()));
                     break;
 
             }
         }
         else
         {
-            lista = productosBLL.GetListDetalle(t => true);
-            listaa = productosBLL.GetList(t => true);
+            //lista = productosBLL.GetListDetalle(t => true);
+            //listaa = productosBLL.GetList(t => true);
         }
     }
 }
