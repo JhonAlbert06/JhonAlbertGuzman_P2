@@ -11,6 +11,8 @@ namespace JhonAlbertGuzman_P2.Entidades
         public int EmpaqueId { get; set; }
         public DateTime? Fecha { get; set; }
 
+        public int Cantidad { get; set; }
+
         [Required(ErrorMessage = "Es obligatorio introducir la descripcion")]
         public string Concepto { get; set; }
 
