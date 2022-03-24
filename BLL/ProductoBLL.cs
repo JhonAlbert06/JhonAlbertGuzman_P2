@@ -159,7 +159,11 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                lista = _contexto.Productos.Where(critero).ToList();
+                lista = _contexto.Productos
+                    .Include(x => x.Detalle)
+                    .Where(critero)
+                    .AsNoTracking()
+                    .ToList();
             }
             catch (Exception)
             {
@@ -167,6 +171,30 @@ namespace JhonAlbertGuzman_P2.BLL
             }
 
             return lista;
+        }
+
+        public bool ModificarInventario(Productos producto)
+        {
+            bool paso = false;
+
+            try
+            {
+                _contexto.Database.ExecuteSqlRaw($"DELETE FROM ProductosDetalle WHERE ProductoId={producto.ProductoId}");
+
+                foreach (var Anterior in producto.Detalle)
+                {
+                    _contexto.Entry(Anterior).State = EntityState.Added;
+                }
+
+                _contexto.Entry(producto).State = EntityState.Modified;
+
+                paso = _contexto.SaveChanges() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return paso;
         }
        
     }
