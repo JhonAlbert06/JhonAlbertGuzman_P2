@@ -7,14 +7,16 @@ namespace JhonAlbertGuzman_P2.BLL
 {
     public class ProductoEmpaqueBLL
     {
-       private Contexto _contexto;
+        public ProductoBLL productosBLL { get; set; }
 
-       public ProductoEmpaqueBLL(Contexto contexto)
-       {
-           _contexto = contexto;
-       } 
+        private Contexto _contexto;
 
-       public bool Guardar(ProductosEmpaque empaque)
+        public ProductoEmpaqueBLL(Contexto contexto)
+        {
+            _contexto = contexto;
+        } 
+
+        public bool Guardar(ProductosEmpaque empaque)
         {
             if (!Existe(empaque.EmpaqueId))
             {
@@ -27,8 +29,6 @@ namespace JhonAlbertGuzman_P2.BLL
             }
         }
 
-        // editar este para que controle el inventario y la manera de agregar productos 
-        // se deben recorrer
         private bool Insertar(ProductosEmpaque empaque)
         {
             bool paso = false;
@@ -43,6 +43,7 @@ namespace JhonAlbertGuzman_P2.BLL
                     _contexto.Entry(item).State = EntityState.Added;
                     _contexto.Entry(item.producto).State = EntityState.Modified;
                     item.producto.Existencia -= item.Cantidad;
+                    RestaInvetarios(item.ProductoId);
                 }
 
                 var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
@@ -83,12 +84,12 @@ namespace JhonAlbertGuzman_P2.BLL
                 {
                     _contexto.Entry(item).State = EntityState.Added;
                     _contexto.Entry(item.producto).State = EntityState.Modified;
-
                     item.producto.Existencia -= item.Cantidad;
+                    RestaInvetarios(item.ProductoId);
                 }
                 
                 var producido2 = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
-                
+
                 _contexto.Entry(empaque).State = EntityState.Modified;
                 paso = _contexto.SaveChanges() > 0;
 
@@ -107,11 +108,20 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                var producto = _contexto.ProductosEmpaque.Find(Id);
+                var empaque = _contexto.ProductosEmpaque.Find(Id);
 
-                if (producto != null)
+                if (empaque != null)
                 {
-                    _contexto.ProductosEmpaque.Remove(producto);
+                    foreach (var item in empaque.Utilizados)
+                    {
+                        _contexto.Entry(item.producto).State = EntityState.Modified;
+                        item.producto.Existencia += item.Cantidad;
+                        SumaInventarios(item.ProductoId);
+                    }
+                    
+                    var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia -= empaque.Cantidad;
+                    
+                    _contexto.ProductosEmpaque.Remove(empaque);
                     paso = _contexto.SaveChanges() > 0;
                 }
             }
@@ -198,6 +208,21 @@ namespace JhonAlbertGuzman_P2.BLL
             return lista;
         }
 
+        public void RestaInvetarios(int id)
+        {
+            var producto = productosBLL.Buscar(id);                    
+            producto.Ganancia = ((producto.Precio - producto.Costo) * 100) / producto.Costo;
+            producto.ValorInventario = producto.Existencia * producto.Costo;
+            productosBLL.ModificarInventario(producto);
+        }
+
+        public void SumaInventarios(int id)
+        {
+            var producto = productosBLL.Buscar(id);                    
+            producto.Ganancia = ((producto.Precio - producto.Costo) * 100) / producto.Costo;
+            producto.ValorInventario = producto.Existencia * producto.Costo;
+            productosBLL.ModificarInventario(producto);
+        } 
 
     }
 }
