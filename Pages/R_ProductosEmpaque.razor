@@ -181,7 +181,7 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="CantidadProducido" />
+                                <InputNumber class="form-control" @bind-Value="CantidadProducido" min=0 />
                                 <ValidationMessage For="@(() => CantidadProducido)" />
                             </div>
 
