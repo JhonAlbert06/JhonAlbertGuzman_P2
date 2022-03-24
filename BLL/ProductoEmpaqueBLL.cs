@@ -19,8 +19,7 @@ namespace JhonAlbertGuzman_P2.BLL
         public bool Guardar(ProductosEmpaque empaque)
         {
             if (!Existe(empaque.EmpaqueId))
-            {
-                
+            {  
                 return Insertar(empaque);
             }
             else
@@ -41,6 +40,7 @@ namespace JhonAlbertGuzman_P2.BLL
                 foreach (var item in empaque.Utilizados)
                 {
                     _contexto.Entry(item).State = EntityState.Added;
+                    _contexto.Entry(item.producto).State = new EntityState();
                     _contexto.Entry(item.producto).State = EntityState.Modified;
                     item.producto.Existencia -= item.Cantidad;
                     RestaInvetarios(item.ProductoId);
@@ -66,11 +66,11 @@ namespace JhonAlbertGuzman_P2.BLL
             {
 
                 var anterior = _contexto.ProductosEmpaque
-                .Where(x => x.EmpaqueId == empaque.EmpaqueId)
-                .Include(x => x.Utilizados)
-                .ThenInclude(x => x.producto)
-                .AsNoTracking()
-                .SingleOrDefault();
+                    .Where(x => x.EmpaqueId == empaque.EmpaqueId)
+                    .Include(x => x.Utilizados)
+                    .ThenInclude(x => x.producto)
+                    .AsNoTracking()
+                    .SingleOrDefault();
 
                 foreach (var item in anterior.Utilizados)
                 {
