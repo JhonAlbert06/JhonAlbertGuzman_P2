@@ -173,7 +173,7 @@
                                         <option value="@item">@item</option>
                                     }
 
-                                    <option value="Mixtas">Mixtas</option>
+                                    <option value="Mixtas" >Mixtas</option>
 
                                 </InputSelect>
                             </div>
@@ -277,6 +277,7 @@
     {
         if (productosEmpaqueBLL.Guardar(productoEmpaque))
         {
+            CrearProducido();
             toastService.ShowInfo("Se guardó exitosamente");
         }
         else
@@ -333,7 +334,6 @@
     public void LlenarLista(string descripcion)
     {
         listaCreados.Add(descripcion);
-        @* Mixto += @"{descripcion}"; *@
     }
 
     public void LlenarListaId(string Descripcion)
@@ -345,6 +345,12 @@
                 listaId.Add(item.ProductoId);
             }
         }
+    }
+
+    public void CrearProducido()
+    {
+        var auxiliar = new Productos(ProductosCreados);
+        productosBLL.Guardar(auxiliar);
     }
 
 }
