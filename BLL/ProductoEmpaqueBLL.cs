@@ -40,12 +40,12 @@ namespace JhonAlbertGuzman_P2.BLL
 
                 foreach (var item in empaque.Utilizados)
                 {
-                    _contexto.Entry(item).State = EntityState.Added:
+                    _contexto.Entry(item).State = EntityState.Added;
                     _contexto.Entry(item.producto).State = EntityState.Modified;
-                    item.producto.Existencia -= utilizados.Cantidad;
+                    item.producto.Existencia -= item.Cantidad;
                 }
 
-                var producido = _contexto.Productos.Find(empaque.ProductoId).Existencia += empaque.Cantidad;
+                var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
                 paso = _contexto.SaveChanges() > 0;
 
             }
@@ -71,7 +71,7 @@ namespace JhonAlbertGuzman_P2.BLL
                 .AsNoTracking()
                 .SingleOrDefault();
 
-                foreach (var item int anterior.Utilizados)
+                foreach (var item in anterior.Utilizados)
                 {
                     item.producto.Existencia += item.Cantidad;
                 }
@@ -79,7 +79,7 @@ namespace JhonAlbertGuzman_P2.BLL
                 var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia -= empaque.Cantidad;
                 _contexto.Database.ExecuteSqlRaw($"Delete FROM Utilizados where EmpaqueId={empaque.EmpaqueId}");
 
-                foreach (var item in empacado.ProductosUtilizados)
+                foreach (var item in empaque.Utilizados)
                 {
                     _contexto.Entry(item).State = EntityState.Added;
                     _contexto.Entry(item.producto).State = EntityState.Modified;
@@ -87,7 +87,7 @@ namespace JhonAlbertGuzman_P2.BLL
                     item.producto.Existencia -= item.Cantidad;
                 }
                 
-                var producido2 = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empacado.Cantidad;
+                var producido2 = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
                 
                 _contexto.Entry(empaque).State = EntityState.Modified;
                 paso = _contexto.SaveChanges() > 0;
