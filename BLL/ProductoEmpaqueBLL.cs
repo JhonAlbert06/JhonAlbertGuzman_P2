@@ -35,8 +35,19 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                _contexto.ProductosEmpaque.Add(empaque).State = EntityState.Added;
+
+                _contexto.ProductosEmpaque.Add(empaque);
+
+                foreach (var item in empaque.Utilizados)
+                {
+                    _contexto.Entry(item).State = EntityState.Added:
+                    _contexto.Entry(item.producto).State = EntityState.Modified;
+                    item.producto.Existencia -= utilizados.Cantidad;
+                }
+
+                var producido = _contexto.Productos.Find(empaque.ProductoId).Existencia += empaque.Cantidad;
                 paso = _contexto.SaveChanges() > 0;
+
             }
             catch (Exception)
             {
@@ -52,8 +63,35 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                _contexto.ProductosEmpaque.Update(empaque);
+
+                var anterior = _contexto.ProductosEmpaque
+                .Where(x => x.EmpaqueId == empaque.EmpaqueId)
+                .Include(x => x.Utilizados)
+                .ThenInclude(x => x.producto)
+                .AsNoTracking()
+                .SingleOrDefault();
+
+                foreach (var item int anterior.Utilizados)
+                {
+                    item.producto.Existencia += item.Cantidad;
+                }
+
+                var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia -= empaque.Cantidad;
+                _contexto.Database.ExecuteSqlRaw($"Delete FROM Utilizados where EmpaqueId={empaque.EmpaqueId}");
+
+                foreach (var item in empacado.ProductosUtilizados)
+                {
+                    _contexto.Entry(item).State = EntityState.Added;
+                    _contexto.Entry(item.producto).State = EntityState.Modified;
+
+                    item.producto.Existencia -= item.Cantidad;
+                }
+                
+                var producido2 = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empacado.Cantidad;
+                
+                _contexto.Entry(empaque).State = EntityState.Modified;
                 paso = _contexto.SaveChanges() > 0;
+
             }
             catch (Exception)
             {
