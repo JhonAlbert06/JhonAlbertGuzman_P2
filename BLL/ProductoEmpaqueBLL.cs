@@ -34,7 +34,10 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
+                /* _contexto.ProductosEmpaque.Add(empaque).State = EntityState.Added;
+                paso = _contexto.SaveChanges() > 0; */
 
+                
                 _contexto.ProductosEmpaque.Add(empaque);
 
                 foreach (var item in empaque.Utilizados)
@@ -46,7 +49,8 @@ namespace JhonAlbertGuzman_P2.BLL
                 }
 
                 var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
-                paso = _contexto.SaveChanges() > 0;
+                paso = _contexto.SaveChanges() > 0; 
+                
 
             }
             catch (Exception)
@@ -63,7 +67,11 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-
+                /*
+                _contexto.ProductosEmpaque.Update(empaque);
+                paso = _contexto.SaveChanges() > 0;
+                */
+                 
                 var anterior = _contexto.ProductosEmpaque
                     .Where(x => x.EmpaqueId == empaque.EmpaqueId)
                     .Include(x => x.Utilizados)
@@ -90,7 +98,8 @@ namespace JhonAlbertGuzman_P2.BLL
                 var producido2 = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
 
                 _contexto.Entry(empaque).State = EntityState.Modified;
-                paso = _contexto.SaveChanges() > 0;
+                paso = _contexto.SaveChanges() > 0; 
+                
 
             }
             catch (Exception)
@@ -115,7 +124,7 @@ namespace JhonAlbertGuzman_P2.BLL
                     {
                         _contexto.Entry(item.producto).State = EntityState.Modified;
                         item.producto.Existencia += item.Cantidad;
-                        //SumaInventarios(item.ProductoId);
+                        SumaInventarios(item.ProductoId);
                     }
                     
                     var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia -= empaque.Cantidad;
