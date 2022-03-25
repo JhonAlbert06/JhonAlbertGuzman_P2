@@ -40,10 +40,9 @@ namespace JhonAlbertGuzman_P2.BLL
                 foreach (var item in empaque.Utilizados)
                 {
                     _contexto.Entry(item).State = EntityState.Added;
-                    _contexto.Entry(item.producto).State = new EntityState();
                     _contexto.Entry(item.producto).State = EntityState.Modified;
                     item.producto.Existencia -= item.Cantidad;
-                    RestaInvetarios(item.ProductoId);
+                    //RestaInvetarios(item.ProductoId);
                 }
 
                 var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
@@ -85,7 +84,7 @@ namespace JhonAlbertGuzman_P2.BLL
                     _contexto.Entry(item).State = EntityState.Added;
                     _contexto.Entry(item.producto).State = EntityState.Modified;
                     item.producto.Existencia -= item.Cantidad;
-                    RestaInvetarios(item.ProductoId);
+                    //RestaInvetarios(item.ProductoId);
                 }
                 
                 var producido2 = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
@@ -116,7 +115,7 @@ namespace JhonAlbertGuzman_P2.BLL
                     {
                         _contexto.Entry(item.producto).State = EntityState.Modified;
                         item.producto.Existencia += item.Cantidad;
-                        SumaInventarios(item.ProductoId);
+                        //SumaInventarios(item.ProductoId);
                     }
                     
                     var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia -= empaque.Cantidad;
@@ -142,6 +141,9 @@ namespace JhonAlbertGuzman_P2.BLL
                 empaque = _contexto.ProductosEmpaque
                     .Include(u => u.Utilizados)
                     .Where(p => p.EmpaqueId == Id)
+                    .Include( x => x.Utilizados)
+                    .ThenInclude( x => x.producto)
+                    .ThenInclude( x => x.Detalle)
                     .AsNoTracking()
                     .SingleOrDefault();
             }
@@ -196,6 +198,9 @@ namespace JhonAlbertGuzman_P2.BLL
             try
             {
                 lista = _contexto.ProductosEmpaque
+                    .Include(x => x.Utilizados)
+                    .ThenInclude(x => x.producto)
+                    .ThenInclude(x => x.Detalle)
                     .Where(critero)
                     .AsNoTracking()
                     .ToList();
