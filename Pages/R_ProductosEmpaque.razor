@@ -71,7 +71,7 @@
                             @* ComboBox Productos *@
                             <div class="form-group col">
                                 <label>Productos: </label>
-                                <InputSelect id="SelectProductos" @bind-Value="Descripcion" class="form-control">
+                                <InputSelect id="SelectProductos" @bind-Value="utilizado.Descripcion" class="form-control">
 
                                     <option></option>
 
@@ -86,8 +86,8 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="CantidadUtilizado" />
-                                <ValidationMessage For="@(() => CantidadUtilizado)" />
+                                <InputNumber class="form-control" @bind-Value="utilizado.Cantidad" />
+                                <ValidationMessage For="@(() => utilizado.Cantidad)" />
                             </div>
 
                             @* Boton Agregar Utizados *@
@@ -221,14 +221,11 @@
 @code {
 
     public string Mixto { get; set; }
-    public string Descripcion { get; set; }
-    public int CantidadUtilizado { get; set; } = 0;
     public int CantidadProducido { get; set; } = 0;
     public string? ProductosCreados { get; set; }
     public double Total { get; set; } = 0;
     public Productos producto { get; set; } = new Productos();
     public Utilizados utilizado { get; set; } = new Utilizados();
-    public Producidos producido { get; set; } = new Producidos();
     public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
     public List<Productos> listaProductos { get; set; } = new List<Productos>();
     public List<string> listaCreados = new List<string>();
@@ -306,17 +303,33 @@
 
     public void AgregarUtilizados()
     {
-        var aux = productosBLL.ExisteProducto(Descripcion);
+        bool paso;
+        
+        utilizado.producto = producto;
+        utilizado.ProductoId = producto.ProductoId;
+        utilizado.Descripcion = producto.Descripcion;
+        
+        this.producto = productosBLL.Buscar(utilizado.ProductoId);
 
-        this.productoEmpaque.Utilizados.Add(utilizado = new Utilizados(CantidadUtilizado, Descripcion, aux.ProductoId));
-        CacularPesoTotal(Descripcion, CantidadUtilizado);
-        LlenarLista(Descripcion);
-        LlenarListaId(Descripcion);
-    }
+        paso = productoEmpaque.Utilizados.Any(u => u.ProductoId == utilizado.ProductoId);
 
-    public void AgregarProducido()
-    {
-        @* var aux = productosBLL.ExisteProducto(Descripcion); *@
+        if (!paso)
+        {
+            productoEmpaque.Utilizados.Add(utilizado);
+        }
+        else
+        {
+            var auxialiar = productoEmpaque.Utilizados.Find(u => u.ProductoId == utilizado.Id);
+            utilizado.Cantidad += auxialiar.Cantidad;
+            productoEmpaque.Utilizados.Remove(auxialiar);
+            productoEmpaque.Utilizados.Add(auxialiar);
+        }
+
+        CacularPesoTotal(utilizado.Descripcion, utilizado.Cantidad);
+        LlenarLista(utilizado.Descripcion);
+
+        this.utilizado = new Utilizados();
+        this.producto = new Productos();
     }
 
     // Mejorar con LinQ
@@ -334,17 +347,6 @@
     public void LlenarLista(string descripcion)
     {
         listaCreados.Add(descripcion);
-    }
-
-    public void LlenarListaId(string Descripcion)
-    {
-        foreach (var item in listaProductos)
-        {
-            if (Descripcion == item.Descripcion)
-            {
-                listaId.Add(item.ProductoId);
-            }
-        }
     }
 
     public void CrearProducido()
