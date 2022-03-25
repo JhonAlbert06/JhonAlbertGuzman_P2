@@ -13,18 +13,5 @@ namespace JhonAlbertGuzman_P2.Entidades
         
         [ForeignKey("ProductoId")] 
         public Productos producto { get; set; } = new Productos();
-
-        public Utilizados()
-        {
-            Cantidad = 0;
-            Descripcion = null;
-        }
-
-        public Utilizados(int cantidad, string descripcion, int id)
-        {
-            Cantidad = cantidad;
-            Descripcion = descripcion;
-            ProductoId = id;
-        }
     }
 }
