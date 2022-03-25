@@ -42,7 +42,7 @@ namespace JhonAlbertGuzman_P2.BLL
                     _contexto.Entry(item).State = EntityState.Added;
                     _contexto.Entry(item.producto).State = EntityState.Modified;
                     item.producto.Existencia -= item.Cantidad;
-                    //RestaInvetarios(item.ProductoId);
+                    RestaInvetarios(item.ProductoId);
                 }
 
                 var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
@@ -84,7 +84,7 @@ namespace JhonAlbertGuzman_P2.BLL
                     _contexto.Entry(item).State = EntityState.Added;
                     _contexto.Entry(item.producto).State = EntityState.Modified;
                     item.producto.Existencia -= item.Cantidad;
-                    //RestaInvetarios(item.ProductoId);
+                    RestaInvetarios(item.ProductoId);
                 }
                 
                 var producido2 = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
