@@ -116,7 +116,7 @@
 
                                     <tr>
 
-                                        <td>@item.Id</td>
+                                        <td>@item.ProductoId</td>
                                         <td>@item.Descripcion</td>
                                         <td>@item.Cantidad</td>
 
@@ -272,9 +272,11 @@
 
     public void Guardar()
     {
-        if (productosEmpaqueBLL.Guardar(productoEmpaque))
+        bool paso = productosEmpaqueBLL.Guardar(productoEmpaque);
+
+        if (paso)
         {
-            CrearProducido();
+            //CrearProducido();
             toastService.ShowInfo("Se guardó exitosamente");
         }
         else
@@ -303,15 +305,12 @@
 
     public void AgregarUtilizados()
     {
-        bool paso;
-        
-        utilizado.producto = producto;
-        utilizado.ProductoId = producto.ProductoId;
-        utilizado.Descripcion = producto.Descripcion;
-        
-        this.producto = productosBLL.Buscar(utilizado.ProductoId);
+        producto = productosBLL.ExisteProducto(utilizado.Descripcion);
 
-        paso = productoEmpaque.Utilizados.Any(u => u.ProductoId == utilizado.ProductoId);
+        this.utilizado.ProductoId = producto.ProductoId;
+        this.productoEmpaque.Utilizados.Add(utilizado);
+        
+        bool paso = productoEmpaque.Utilizados.Any(u => u.ProductoId == utilizado.ProductoId);
 
         if (!paso)
         {
@@ -324,12 +323,13 @@
             productoEmpaque.Utilizados.Remove(auxialiar);
             productoEmpaque.Utilizados.Add(auxialiar);
         }
-
+        
         CacularPesoTotal(utilizado.Descripcion, utilizado.Cantidad);
         LlenarLista(utilizado.Descripcion);
 
-        this.utilizado = new Utilizados();
-        this.producto = new Productos();
+        utilizado = new Utilizados();
+        producto = new Productos(); 
+        
     }
 
     // Mejorar con LinQ
