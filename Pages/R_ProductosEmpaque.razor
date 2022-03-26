@@ -1,6 +1,6 @@
 @inject IToastService toastService
 @page "/R_ProductosEmpaque"
-@page "/C_ProductosEmpaque-/{empaqueId:int}"
+@page "/C_ProductosEmpaque/{empaqueId:int}"
 
 <EditForm Model="productoEmpaque" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -173,7 +173,7 @@
                                         <option value="@item">@item</option>
                                     }
 
-                                    <option value="Mixtas" >Mixtas</option>
+                                    <option value="@productoEmpaque.Concepto" >Mixtas</option>
 
                                 </InputSelect>
                             </div>
@@ -220,7 +220,7 @@
 
 @code {
 
-    public string Mixto { get; set; }
+    public int IdBusqueda { get; set; } = 0;
     public int CantidadProducido { get; set; } = 0;
     public string? ProductosCreados { get; set; }
     public double Total { get; set; } = 0;
@@ -305,12 +305,13 @@
 
     public void AgregarUtilizados()
     {
-        producto = new Productos(); 
+        producto = new Productos();
 
+        //producto = productosBLL.Buscar(utilizado.UtilizadoId);
         producto = productosBLL.ExisteProducto(utilizado.Descripcion);
-
         this.utilizado.UtilizadoId = producto.ProductoId;
-        
+        this.utilizado.producto = producto;
+
         bool paso = productoEmpaque.Utilizados.Any(u => u.UtilizadoId == utilizado.UtilizadoId);
 
         if (!paso)
@@ -328,10 +329,7 @@
         CacularPesoTotal(utilizado.Descripcion, utilizado.Cantidad);
         LlenarLista(utilizado.Descripcion);
 
-        this.utilizado.producto = producto;
-
-        utilizado = new Utilizados();
-        
+        utilizado = new Utilizados();   
     }
 
     // Mejorar con LinQ
