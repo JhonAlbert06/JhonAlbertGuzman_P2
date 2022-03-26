@@ -116,7 +116,7 @@
 
                                     <tr>
 
-                                        <td>@item.ProductoId</td>
+                                        <td>@item.Id</td>
                                         <td>@item.Descripcion</td>
                                         <td>@item.Cantidad</td>
 
@@ -136,7 +136,7 @@
                     @* Total *@
                     <div class="input-group mb-2">
                         <span class="input-group-text">
-                            Peso Total: Gramos:
+                            Peso Total: 
                         </span>
                         <InputNumber class="form-control" @bind-Value="Total" readonly />
                     </div>
@@ -276,7 +276,7 @@
 
         if (paso)
         {
-            //CrearProducido();
+            CrearProducido();
             toastService.ShowInfo("Se guardó exitosamente");
         }
         else
@@ -305,12 +305,14 @@
 
     public void AgregarUtilizados()
     {
+        producto = new Productos(); 
+
         producto = productosBLL.ExisteProducto(utilizado.Descripcion);
 
-        this.utilizado.ProductoId = producto.ProductoId;
-        this.productoEmpaque.Utilizados.Add(utilizado);
+        this.utilizado.Id = producto.ProductoId;
+        //this.productoEmpaque.Utilizados.Add(utilizado);
         
-        bool paso = productoEmpaque.Utilizados.Any(u => u.ProductoId == utilizado.ProductoId);
+        bool paso = productoEmpaque.Utilizados.Any(u => u.Id == utilizado.Id);
 
         if (!paso)
         {
@@ -318,7 +320,7 @@
         }
         else
         {
-            var auxialiar = productoEmpaque.Utilizados.Find(u => u.ProductoId == utilizado.Id);
+            var auxialiar = productoEmpaque.Utilizados.Find(u => u.Id == utilizado.Id);
             utilizado.Cantidad += auxialiar.Cantidad;
             productoEmpaque.Utilizados.Remove(auxialiar);
             productoEmpaque.Utilizados.Add(auxialiar);
@@ -328,7 +330,6 @@
         LlenarLista(utilizado.Descripcion);
 
         utilizado = new Utilizados();
-        producto = new Productos(); 
         
     }
 
