@@ -41,9 +41,7 @@
 
             <thead class="thead-dark">
                 <tr class="table-info">
-                    <th>Producto Id</th>
                     <th>Id</th>
-                    <th>Descripcion</th>
                     <th>Presentacion</th>
                     <th>Cantidad</th>
                     <th>Precio</th>
@@ -52,22 +50,18 @@
             </thead>
 
             <tbody>
-                @foreach (var itemm in listaa)
+
+                @foreach (var producto in lista)
                 {
-                    @foreach (var item in lista)
-                    {
-                        if (itemm.ProductoId == item.ProductoId)
-                        {
-                            <tr>
-                                <td>@item.ProductoId</td>
-                                <td>@item.Id</td>
-                                <td>@itemm.Descripcion</td>
-                                <td>@item.Presentacion</td>
-                                <td>@item.Cantidad</td>
-                                <td>RD$ @item.Precio</td>
-                                <td>@(Convert.ToInt32(itemm.Existencia / item.Cantidad))</td>
-                            </tr>
-                        }
+                    @foreach (var detalle in producto.Detalle)
+                    {   
+                        <tr>
+                            <td>@detalle.Id</td>
+                            <td>@detalle.Presentacion</td>
+                            <td>@detalle.Cantidad</td>
+                            <td>@detalle.Precio</td>
+                            <td>@(Convert.ToInt32(producto.Existencia / detalle.Cantidad))</td>
+                        </tr>
                     }
                 }
             </tbody>
@@ -83,8 +77,7 @@
 
     public string Filtro { get; set; }
     public string Criterio { get; set; }
-    public List<Productos> listaa { get; set; } = new List<Productos>();
-    public List<ProductosDetalle> lista { get; set; } = new List<ProductosDetalle>();
+    public List<Productos> lista { get; set; } = new List<Productos>();
 
     [Inject]
     public ProductoBLL productosBLL { get; set; }
@@ -96,19 +89,17 @@
             switch (Filtro)
             {
                 case "1":
-                    lista = productosBLL.GetListDetalle(t => t.ProductoId == int.Parse(Criterio));
+                    lista = productosBLL.GetList(t => t.ProductoId == int.Parse(Criterio));
                     break;
 
                 case "2":
-                    lista = productosBLL.GetListDetalle(t => t.Presentacion.ToLower().Contains(Criterio.ToLower()));
+                    lista = productosBLL.GetList(t => t.Descripcion.ToLower().Contains(Criterio.ToLower()));
                     break;
-
             }
         }
         else
         {
-            lista = productosBLL.GetListDetalle(t => true);
-            listaa = productosBLL.GetList(t => true);
+            lista = productosBLL.GetList(t => true);
         }
     }
 }

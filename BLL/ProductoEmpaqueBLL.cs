@@ -7,34 +7,48 @@ namespace JhonAlbertGuzman_P2.BLL
 {
     public class ProductoEmpaqueBLL
     {
-       private Contexto _contexto;
+        public ProductoBLL productosBLL { get; set; }
 
-       public ProductoEmpaqueBLL(Contexto contexto)
-       {
-           _contexto = contexto;
-       } 
+        private Contexto _contexto;
 
-       public bool Guardar(ProductosEmpaque producto)
+        public ProductoEmpaqueBLL(Contexto contexto)
         {
-            if (!Existe(producto.ProductoId))
-            {
-                
-                return Insertar(producto);
+            _contexto = contexto;
+        } 
+
+        public bool Guardar(ProductosEmpaque empaque)
+        {
+            if (!Existe(empaque.EmpaqueId))
+            {  
+                return Insertar(empaque);
             }
             else
             {
-                return Modificar(producto);
+                return Modificar(empaque);
             }
         }
 
-        private bool Insertar(ProductosEmpaque producto)
+        private bool Insertar(ProductosEmpaque empaque)
         {
             bool paso = false;
 
             try
             {
-                _contexto.ProductosEmpaque.Add(producto).State = EntityState.Added;
-                paso = _contexto.SaveChanges() > 0;
+                
+                _contexto.ProductosEmpaque.Add(empaque);
+
+                foreach (var item in empaque.Utilizados)
+                {
+                    _contexto.Entry(item).State = EntityState.Added;
+                    _contexto.Entry(item.producto).State = EntityState.Modified;
+                    item.producto.Existencia -= item.Cantidad;
+                    //RestaInvetarios(item.ProductoId);
+                }
+
+                //var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
+                paso = _contexto.SaveChanges() > 0; 
+                
+
             }
             catch (Exception)
             {
@@ -44,14 +58,42 @@ namespace JhonAlbertGuzman_P2.BLL
             return paso;
         }
 
-        private bool Modificar(ProductosEmpaque producto)
+        private bool Modificar(ProductosEmpaque empaque)
         {
             bool paso = false;
 
             try
             {
-                _contexto.ProductosEmpaque.Update(producto);
-                paso = _contexto.SaveChanges() > 0;
+                 
+                var anterior = _contexto.ProductosEmpaque
+                    .Where(x => x.EmpaqueId == empaque.EmpaqueId)
+                    .Include(x => x.Utilizados)
+                    .ThenInclude(x => x.producto)
+                    .AsNoTracking()
+                    .SingleOrDefault();
+
+                foreach (var item in anterior.Utilizados)
+                {
+                    item.producto.Existencia += item.Cantidad;
+                }
+
+                var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia -= empaque.Cantidad;
+                _contexto.Database.ExecuteSqlRaw($"Delete FROM Utilizados where EmpaqueId={empaque.EmpaqueId}");
+
+                foreach (var item in empaque.Utilizados)
+                {
+                    _contexto.Entry(item).State = EntityState.Added;
+                    _contexto.Entry(item.producto).State = EntityState.Modified;
+                    item.producto.Existencia -= item.Cantidad;
+                    //RestaInvetarios(item.ProductoId);
+                }
+                
+                var producido2 = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
+
+                _contexto.Entry(empaque).State = EntityState.Modified;
+                paso = _contexto.SaveChanges() > 0; 
+                
+
             }
             catch (Exception)
             {
@@ -67,11 +109,20 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                var producto = _contexto.ProductosEmpaque.Find(Id);
+                var empaque = _contexto.ProductosEmpaque.Find(Id);
 
-                if (producto != null)
+                if (empaque != null)
                 {
-                    _contexto.ProductosEmpaque.Remove(producto);
+                    foreach (var item in empaque.Utilizados)
+                    {
+                        _contexto.Entry(item.producto).State = EntityState.Modified;
+                        item.producto.Existencia += item.Cantidad;
+                        //SumaInventarios(item.ProductoId);
+                    }
+                    
+                    var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia -= empaque.Cantidad;
+                    
+                    _contexto.ProductosEmpaque.Remove(empaque);
                     paso = _contexto.SaveChanges() > 0;
                 }
             }
@@ -85,14 +136,16 @@ namespace JhonAlbertGuzman_P2.BLL
 
         public ProductosEmpaque Buscar(int Id)
         {
-            ProductosEmpaque producto;
+            ProductosEmpaque empaque;
 
             try
             {
-                producto = _contexto.ProductosEmpaque
+                empaque = _contexto.ProductosEmpaque
                     .Include(u => u.Utilizados)
-                    .Include(x => x.Producidos)
-                    .Where(p => p.ProductoId == Id)
+                    .Where(p => p.EmpaqueId == Id)
+                    .Include( x => x.Utilizados)
+                    .ThenInclude( x => x.producto)
+                    .ThenInclude( x => x.Detalle)
                     .AsNoTracking()
                     .SingleOrDefault();
             }
@@ -101,7 +154,7 @@ namespace JhonAlbertGuzman_P2.BLL
                 throw;
             }
 
-            return producto;
+            return empaque;
         }
 
         public bool Existe(string descripcion)
@@ -110,7 +163,9 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                paso = _contexto.ProductosEmpaque.AsNoTracking().Any(p => p.Concepto == descripcion);
+                paso = _contexto.ProductosEmpaque
+                    .AsNoTracking()
+                    .Any(p => p.Concepto == descripcion);
             }
             catch (Exception)
             {
@@ -126,7 +181,9 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                paso = _contexto.ProductosEmpaque.AsNoTracking().Any(p => p.ProductoId == Id);
+                paso = _contexto.ProductosEmpaque
+                    .AsNoTracking()
+                    .Any(p => p.EmpaqueId == Id);
             }
             catch (Exception)
             {
@@ -142,7 +199,13 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                lista = _contexto.ProductosEmpaque.Where(critero).AsNoTracking().ToList();
+                lista = _contexto.ProductosEmpaque
+                    .Include(x => x.Utilizados)
+                    .ThenInclude(x => x.producto)
+                    .ThenInclude(x => x.Detalle)
+                    .Where(critero)
+                    .AsNoTracking()
+                    .ToList();
             }
             catch (Exception)
             {
@@ -151,36 +214,22 @@ namespace JhonAlbertGuzman_P2.BLL
 
             return lista;
         }
-        public List<Utilizados> GetListUtilizado(Expression<Func<Utilizados, bool>> critero)
+
+        /* public void RestaInvetarios(int id)
         {
-            List<Utilizados> lista = new List<Utilizados>();
-
-            try
-            {
-                lista = _contexto.Utilizados.Where(critero).AsNoTracking().ToList();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            return lista;
+            var producto = productosBLL.Buscar(id);                    
+            producto.Ganancia = ((producto.Precio - producto.Costo) * 100) / producto.Costo;
+            producto.ValorInventario = producto.Existencia * producto.Costo;
+            productosBLL.ModificarInventario(producto);
         }
 
-        public List<Producidos> GetListProducidos(Expression<Func<Producidos, bool>> critero)
+        public void SumaInventarios(int id)
         {
-            List<Producidos> lista = new List<Producidos>();
+            var producto = productosBLL.Buscar(id);                    
+            producto.Ganancia = ((producto.Precio - producto.Costo) * 100) / producto.Costo;
+            producto.ValorInventario = producto.Existencia * producto.Costo;
+            productosBLL.ModificarInventario(producto);
+        } */ 
 
-            try
-            {
-                lista = _contexto.Producidos.Where(critero).AsNoTracking().ToList();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            return lista;
-        }
     }
 }

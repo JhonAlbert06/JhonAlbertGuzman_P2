@@ -24,9 +24,22 @@ namespace JhonAlbertGuzman_P2.Entidades
         public double ValorInventario { get; set; }
         public double Ganancia { get; set; }
         public DateTime? Fecha { get; set; }
+        
+        [Required(ErrorMessage = "El peso no puede estar vacio...")]
+        [Range(1, double.MaxValue, ErrorMessage = "El peso debe estar en el rango de {1} y {2}.")]
         public double Peso { get; set ;}
 
         [ForeignKey("ProductoId")]
         public List<ProductosDetalle> Detalle { get; set; } = new List<ProductosDetalle> ();
+
+        public Productos()
+        {
+            
+        }
+        
+        public Productos(string descripcion)
+        {
+            Descripcion = descripcion;
+        }       
     }
 }

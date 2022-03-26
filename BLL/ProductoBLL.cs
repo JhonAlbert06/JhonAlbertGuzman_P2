@@ -91,8 +91,10 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                producto = _contexto.Productos.Include(x => x.Detalle)
+                producto = _contexto.Productos
+                    .Include(x => x.Detalle)
                     .Where(p => p.ProductoId == Id)
+                    .AsNoTracking()
                     .SingleOrDefault();
             }
             catch (Exception)
@@ -159,7 +161,11 @@ namespace JhonAlbertGuzman_P2.BLL
 
             try
             {
-                lista = _contexto.Productos.Where(critero).ToList();
+                lista = _contexto.Productos
+                    .Include(x => x.Detalle)
+                    .Where(critero)
+                    .AsNoTracking()
+                    .ToList();
             }
             catch (Exception)
             {
@@ -167,23 +173,6 @@ namespace JhonAlbertGuzman_P2.BLL
             }
 
             return lista;
-        }
-
-        public List<ProductosDetalle> GetListDetalle(Expression<Func<ProductosDetalle, bool>> criterio)
-        {
-            List<ProductosDetalle> lista = new List<ProductosDetalle>();
-            
-            try
-            {
-                lista = _contexto.ProductosDetalle.Where(criterio).ToList();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            return lista;
-
         }
 
         public bool ModificarInventario(Productos producto)
@@ -209,6 +198,6 @@ namespace JhonAlbertGuzman_P2.BLL
             }
             return paso;
         }
-        
+       
     }
 }

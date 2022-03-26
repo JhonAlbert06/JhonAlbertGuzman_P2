@@ -28,7 +28,7 @@
                                 </button>
                             </div>
                         </div>
-                        <ValidationMessage For="@(() => producto.ProductoId)"/>
+                        <ValidationMessage For="@(() => producto.ProductoId)" />
                     </div>
                 </div>
 
@@ -38,7 +38,8 @@
                 <div class="row">
                     <div class="form-group col">
                         <label>Descripción: </label>
-                        <InputText class="form-control" @bind-Value="@producto.Descripcion" placeholder="Descripción del producto"/>
+                        <InputText class="form-control" @bind-Value="@producto.Descripcion"
+                            placeholder="Descripción del producto" />
                         <ValidationMessage For="@(() => producto.Descripcion)" />
                     </div>
                 </div>
@@ -49,7 +50,8 @@
                 <div class="row">
                     <div class="form-group col">
                         <label>Existencia: </label>
-                        <InputNumber class="form-control" @bind-Value="@producto.Existencia"/>
+                        <InputNumber class="form-control" @bind-Value="@producto.Existencia"
+                            @onblur="CalculoValorInventario" />
                         <ValidationMessage For="@(() => producto.Existencia)" />
                     </div>
                 </div>
@@ -60,7 +62,8 @@
                 <div class="row">
                     <div class="form-group col">
                         <label>Costo: </label>
-                        <InputNumber class="form-control" @bind-Value="@producto.Costo"/>
+                        <InputNumber class="form-control" @bind-Value="@producto.Costo"
+                            @onblur="CalculoValorInventario" />
                         <ValidationMessage For="@(() => producto.Costo)" />
                     </div>
                 </div>
@@ -68,7 +71,7 @@
                 <br>
 
                 @* Valor Inventario *@
-                <div class="row">    
+                <div class="row">
                     <div class="form-group col">
                         <label>Valor Inventario: </label>
                         <InputNumber readonly class="form-control" @bind-Value="@producto.ValorInventario" />
@@ -86,11 +89,12 @@
                         <ValidationMessage For="@(() => producto.Fecha)" />
                     </div>
 
-                    @* Peso *@    
+                    @* Peso *@
                     <div class="form-group col">
                         <label>Peso en Gramos: </label>
                         <InputNumber class="form-control" @bind-Value="@producto.Peso" />
                         <ValidationMessage For="@(() => producto.Peso)" />
+
                     </div>
                 </div>
 
@@ -110,7 +114,7 @@
                             @* Presentacion *@
                             <div class="form-group col">
                                 <label>Presentación: </label>
-                                <InputText class="form-control" @bind-Value="@Presentacion"/>
+                                <InputText class="form-control" @bind-Value="@Presentacion" />
                             </div>
 
                             @* Cantidad *@
@@ -130,7 +134,7 @@
                             </button>
 
                         </div>
-                        
+
                         <br>
 
                         <table class="table table-secondary">
@@ -148,35 +152,36 @@
                                         <td>@item.Presentacion</td>
                                         <td>@item.Cantidad</td>
                                         <td>RD$ @item.Precio</td>
-                                        <td><span class="btn btn-sm btn-outline-primary oi oi-ban" href="#"  @onclick=" (() => RemoverFila(item)) "> Remover</span></td>
+                                        <td><span class="btn btn-sm btn-outline-primary oi oi-ban" href="#"
+                                            @onclick=" (() => RemoverFila(item)) "> Remover</span></td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
-                    
+
                     </form>
-                
+
                 </div>
             </div>
 
             @* Botones *@
             <div class="card-footer">
                 <div class="form-group text-center" display: inline-block>
-                    
+
                     <button type="button" class="btn btn-lg btn-primary" @onclick="Nuevo">
                         <span class="oi oi-plus"> Nuevo</span>
                     </button>
-                    
+
                     <button type="submit" class="btn btn-lg btn-success">
                         <span class="oi oi-folder"> Guardar</span>
                     </button>
-                    
+
                     <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">
                         <span class="oi oi-trash"> Eliminar</span>
                     </button>
                 </div>
             </div>
-        
+
         </div>
     </div>
 </EditForm>
@@ -205,7 +210,7 @@
         if (this.producto.ProductoId > 0)
         {
             Productos encontrado = productosBLL.Buscar(this.producto.ProductoId);
-            
+
             if (encontrado != null)
             {
                 this.producto = encontrado;
@@ -230,6 +235,7 @@
     public void Guardar()
     {
         CalculoValorInventario();
+        CalculoValorGanacia();
 
         if (productosBLL.Guardar(producto))
         {
@@ -271,4 +277,8 @@
         producto.ValorInventario = costo * existencia;
     }
 
+    private void CalculoValorGanacia()
+    {
+        
+    }
 }

@@ -1,5 +1,6 @@
 @inject IToastService toastService
 @page "/R_ProductosEmpaque"
+@page "/C_ProductosEmpaque/{empaqueId:int}"
 
 <EditForm Model="productoEmpaque" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
@@ -20,7 +21,7 @@
                     <div class="form-row">
                         <label>Producto Id: </label>
                         <div class="input-group">
-                            <InputNumber @bind-Value="productoEmpaque.ProductoId" class="form-control col-4 col" />
+                            <InputNumber @bind-Value="productoEmpaque.EmpaqueId" class="form-control col-4 col" />
                             <div class="input-group-append col">
                                 <button type="button" class="btn btn-success input-group-text" @onclick="Buscar">
                                     <span class="oi oi-magnifying-glass"> Buscar</span>
@@ -70,7 +71,7 @@
                             @* ComboBox Productos *@
                             <div class="form-group col">
                                 <label>Productos: </label>
-                                <InputSelect id="SelectProductos" @bind-Value="Descripcion" class="form-control">
+                                <InputSelect id="SelectProductos" @bind-Value="utilizado.Descripcion" class="form-control">
 
                                     <option></option>
 
@@ -85,8 +86,8 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="CantidadUtilizado" />
-                                <ValidationMessage For="@(() => CantidadUtilizado)" />
+                                <InputNumber class="form-control" @bind-Value="utilizado.Cantidad" />
+                                <ValidationMessage For="@(() => utilizado.Cantidad)" />
                             </div>
 
                             @* Boton Agregar Utizados *@
@@ -115,7 +116,7 @@
 
                                     <tr>
 
-                                        <td>@item.Id</td>
+                                        <td>@item.UtilizadoId</td>
                                         <td>@item.Descripcion</td>
                                         <td>@item.Cantidad</td>
 
@@ -135,7 +136,7 @@
                     @* Total *@
                     <div class="input-group mb-2">
                         <span class="input-group-text">
-                            Peso Total: Gramos:
+                            Peso Total: 
                         </span>
                         <InputNumber class="form-control" @bind-Value="Total" readonly />
                     </div>
@@ -172,10 +173,7 @@
                                         <option value="@item">@item</option>
                                     }
 
-                                    @if (indice > 1)
-                                    {
-                                        <option value="Mixtas">Mixtas</option>
-                                    }
+                                    <option value="@productoEmpaque.Concepto" >Mixtas</option>
 
                                 </InputSelect>
                             </div>
@@ -183,7 +181,7 @@
                             @* Cantidad *@
                             <div class="form-group col">
                                 <label>Cantidad: </label>
-                                <InputNumber class="form-control" @bind-Value="CantidadProducido" />
+                                <InputNumber class="form-control" @bind-Value="CantidadProducido" min=0 />
                                 <ValidationMessage For="@(() => CantidadProducido)" />
                             </div>
 
@@ -222,17 +220,15 @@
 
 @code {
 
-    public string Mixto { get; set; }
-    public string Descripcion { get; set; }
-    public int CantidadUtilizado { get; set; } = 0;
+    public int IdBusqueda { get; set; } = 0;
     public int CantidadProducido { get; set; } = 0;
     public string? ProductosCreados { get; set; }
     public double Total { get; set; } = 0;
     public Productos producto { get; set; } = new Productos();
     public Utilizados utilizado { get; set; } = new Utilizados();
-    public Producidos producido { get; set; } = new Producidos();
     public ProductosEmpaque productoEmpaque { get; set; } = new ProductosEmpaque();
     public List<Productos> listaProductos { get; set; } = new List<Productos>();
+    public List<string> listaCreados = new List<string>();
 
     [Inject]
     public ProductoBLL productosBLL { get; set; }
@@ -240,18 +236,23 @@
     [Inject]
     public ProductoEmpaqueBLL productosEmpaqueBLL { get; set; }
 
+    [Parameter]
+    public int empaqueId { get; set; }
+
     protected override void OnInitialized()
     {
         listaProductos = productosBLL.GetList(t => true);
+        productoEmpaque.EmpaqueId = empaqueId;
+        Buscar();
     }
 
     public void Buscar()
     {
-        if (this.productoEmpaque.ProductoId > 0)
+        if (this.productoEmpaque.EmpaqueId > 0)
         {
 
             ProductosEmpaque encontrado = null;
-            encontrado = productosEmpaqueBLL.Buscar(this.productoEmpaque.ProductoId);
+            encontrado = productosEmpaqueBLL.Buscar(this.productoEmpaque.EmpaqueId);
 
             if (encontrado != null)
             {
@@ -271,9 +272,11 @@
 
     public void Guardar()
     {
-        if (productosEmpaqueBLL.Guardar(productoEmpaque))
+        bool paso = productosEmpaqueBLL.Guardar(productoEmpaque);
+
+        if (paso)
         {
-            RestaInvetarios();
+            CrearProducido();
             toastService.ShowInfo("Se guardó exitosamente");
         }
         else
@@ -282,10 +285,9 @@
 
     public void Eliminar()
     {
-        if (productosEmpaqueBLL.Eliminar(productoEmpaque.ProductoId))
+        if (productosEmpaqueBLL.Eliminar(productoEmpaque.EmpaqueId))
         {
             Nuevo();
-            SumaInventarios();
             toastService.ShowSuccess("Eliminación exitosa");
         }
         else
@@ -297,28 +299,40 @@
     private void RemoverFila(Utilizados item)
     {
         this.productoEmpaque.Utilizados.Remove(item);
-        CacularRestaTotal(item.Descripcion, item.Cantidad);
-
     }
 
     public List<int> listaId = new List<int>();
 
     public void AgregarUtilizados()
     {
-        var aux = productosBLL.ExisteProducto(Descripcion);
+        producto = new Productos();
 
-        this.productoEmpaque.Utilizados.Add(utilizado = new Utilizados(CantidadUtilizado, Descripcion, aux.ProductoId));
-        CacularPesoTotal(Descripcion, CantidadUtilizado);
-        LlenarLista(Descripcion);
-        LlenarListaId(Descripcion);
+        //producto = productosBLL.Buscar(utilizado.UtilizadoId);
+        producto = productosBLL.ExisteProducto(utilizado.Descripcion);
+        this.utilizado.UtilizadoId = producto.ProductoId;
+        this.utilizado.producto = producto;
+
+        bool paso = productoEmpaque.Utilizados.Any(u => u.UtilizadoId == utilizado.UtilizadoId);
+
+        if (!paso)
+        {
+            productoEmpaque.Utilizados.Add(utilizado);
+        }
+        else
+        {
+            var auxialiar = productoEmpaque.Utilizados.Find(u => u.Id == utilizado.Id);
+            utilizado.Cantidad += auxialiar.Cantidad;
+            productoEmpaque.Utilizados.Remove(auxialiar);
+            productoEmpaque.Utilizados.Add(auxialiar);
+        }
+        
+        CacularPesoTotal(utilizado.Descripcion, utilizado.Cantidad);
+        LlenarLista(utilizado.Descripcion);
+
+        utilizado = new Utilizados();   
     }
 
-    public void AgregarProducido()
-    {
-        var aux = productosBLL.ExisteProducto(Descripcion);
-        this.productoEmpaque.Producidos.Add(producido = new Producidos(CantidadProducido, ProductosCreados, aux.ProductoId));
-    }
-
+    // Mejorar con LinQ
     public void CacularPesoTotal(string descripcion, int cantidad)
     {
         foreach (var item in listaProductos)
@@ -330,75 +344,15 @@
         }
     }
 
-    public void CacularRestaTotal(string descripcion, int cantidad)
-    {
-        foreach (var item in listaProductos)
-        {
-            if (descripcion == item.Descripcion)
-            {
-                double auxiliar = Total;
-                double resta = (item.Peso * cantidad);
-                Total = auxiliar - resta;
-            }
-        }
-    }
-
-    public List<string> listaCreados = new List<string>();
-    public int indice { get; set; } = 0;
-
     public void LlenarLista(string descripcion)
     {
         listaCreados.Add(descripcion);
-        @* Mixto += @"{descripcion}"; *@
-        indice++;
     }
 
-    public void LlenarListaId(string Descripcion)
+    public void CrearProducido()
     {
-        foreach (var item in listaProductos)
-        {
-            if (Descripcion == item.Descripcion)
-            {
-                listaId.Add(item.ProductoId);
-            }
-        }
-    }
-
-    public void RestaInvetarios()
-    {
-
-        foreach (var item in listaId)
-        {
-            var auxiliar = productosBLL.Buscar(item);
-
-            if (auxiliar != null)
-            {
-                this.producto = auxiliar;
-                producto.Existencia -= utilizado.Cantidad;
-                producto.Ganancia = ((producto.Precio - producto.Costo) * 100) / producto.Costo;
-                producto.ValorInventario = producto.Existencia * producto.Costo;
-                productosBLL.ModificarInventario(producto);
-            }
-        }
-
-    }
-
-    public void SumaInventarios()
-    {
-        foreach (var item in listaId)
-        {
-            var auxiliar = productosBLL.Buscar(item);
-
-            if (auxiliar != null)
-            {
-                this.producto = auxiliar;
-                producto.Existencia += utilizado.Cantidad;
-                producto.Ganancia = ((producto.Precio - producto.Costo) * 100) / producto.Costo;
-                producto.ValorInventario = producto.Existencia * producto.Costo;
-                productosBLL.ModificarInventario(producto);
-            }
-        }
-
+        var auxiliar = new Productos(ProductosCreados);
+        productosBLL.Guardar(auxiliar);
     }
 
 }

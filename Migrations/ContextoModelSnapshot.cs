@@ -15,30 +15,7 @@ namespace JhonAlbertGuzman_P2.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.2");
-
-            modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Producidos", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ProductoId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductoId");
-
-                    b.ToTable("Producidos");
-                });
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
 
             modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Productos", b =>
                 {
@@ -113,8 +90,11 @@ namespace JhonAlbertGuzman_P2.Migrations
 
             modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.ProductosEmpaque", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("EmpaqueId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Cantidad")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Concepto")
@@ -124,10 +104,7 @@ namespace JhonAlbertGuzman_P2.Migrations
                     b.Property<DateTime?>("Fecha")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProductoId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
+                    b.HasKey("EmpaqueId");
 
                     b.ToTable("ProductosEmpaque");
                 });
@@ -145,23 +122,22 @@ namespace JhonAlbertGuzman_P2.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("EmpaqueId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ProductoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UtilizadoId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EmpaqueId");
+
                     b.HasIndex("ProductoId");
 
                     b.ToTable("Utilizados");
-                });
-
-            modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Producidos", b =>
-                {
-                    b.HasOne("JhonAlbertGuzman_P2.Entidades.ProductosEmpaque", null)
-                        .WithMany("Producidos")
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.ProductosDetalle", b =>
@@ -177,9 +153,15 @@ namespace JhonAlbertGuzman_P2.Migrations
                 {
                     b.HasOne("JhonAlbertGuzman_P2.Entidades.ProductosEmpaque", null)
                         .WithMany("Utilizados")
+                        .HasForeignKey("EmpaqueId");
+
+                    b.HasOne("JhonAlbertGuzman_P2.Entidades.Productos", "producto")
+                        .WithMany()
                         .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("producto");
                 });
 
             modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.Productos", b =>
@@ -189,8 +171,6 @@ namespace JhonAlbertGuzman_P2.Migrations
 
             modelBuilder.Entity("JhonAlbertGuzman_P2.Entidades.ProductosEmpaque", b =>
                 {
-                    b.Navigation("Producidos");
-
                     b.Navigation("Utilizados");
                 });
 #pragma warning restore 612, 618

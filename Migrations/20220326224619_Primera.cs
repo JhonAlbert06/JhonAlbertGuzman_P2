@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace JhonAlbertGuzman_P2.Migrations
 {
-    public partial class primera : Migration
+    public partial class Primera : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,6 +18,7 @@ namespace JhonAlbertGuzman_P2.Migrations
                     Descripcion = table.Column<string>(type: "TEXT", nullable: false),
                     Existencia = table.Column<double>(type: "REAL", nullable: false),
                     Costo = table.Column<double>(type: "REAL", nullable: false),
+                    Precio = table.Column<double>(type: "REAL", nullable: false),
                     ValorInventario = table.Column<double>(type: "REAL", nullable: false),
                     Ganancia = table.Column<double>(type: "REAL", nullable: false),
                     Fecha = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -32,14 +33,15 @@ namespace JhonAlbertGuzman_P2.Migrations
                 name: "ProductosEmpaque",
                 columns: table => new
                 {
-                    ProductoId = table.Column<int>(type: "INTEGER", nullable: false)
+                    EmpaqueId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Fecha = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Cantidad = table.Column<int>(type: "INTEGER", nullable: false),
                     Concepto = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductosEmpaque", x => x.ProductoId);
+                    table.PrimaryKey("PK_ProductosEmpaque", x => x.EmpaqueId);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,56 +70,42 @@ namespace JhonAlbertGuzman_P2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Producidos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ProductoId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Cantidad = table.Column<int>(type: "INTEGER", nullable: false),
-                    Descripcion = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Producidos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Producidos_ProductosEmpaque_ProductoId",
-                        column: x => x.ProductoId,
-                        principalTable: "ProductosEmpaque",
-                        principalColumn: "ProductoId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Utilizados",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ProductoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UtilizadoId = table.Column<int>(type: "INTEGER", nullable: false),
                     Cantidad = table.Column<int>(type: "INTEGER", nullable: false),
-                    Descripcion = table.Column<string>(type: "TEXT", nullable: false)
+                    Descripcion = table.Column<string>(type: "TEXT", nullable: false),
+                    ProductoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    EmpaqueId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Utilizados", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Utilizados_ProductosEmpaque_ProductoId",
+                        name: "FK_Utilizados_Productos_ProductoId",
                         column: x => x.ProductoId,
-                        principalTable: "ProductosEmpaque",
+                        principalTable: "Productos",
                         principalColumn: "ProductoId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Utilizados_ProductosEmpaque_EmpaqueId",
+                        column: x => x.EmpaqueId,
+                        principalTable: "ProductosEmpaque",
+                        principalColumn: "EmpaqueId");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Producidos_ProductoId",
-                table: "Producidos",
-                column: "ProductoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductosDetalle_ProductoId",
                 table: "ProductosDetalle",
                 column: "ProductoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Utilizados_EmpaqueId",
+                table: "Utilizados",
+                column: "EmpaqueId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Utilizados_ProductoId",
@@ -127,9 +115,6 @@ namespace JhonAlbertGuzman_P2.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Producidos");
-
             migrationBuilder.DropTable(
                 name: "ProductosDetalle");
 
