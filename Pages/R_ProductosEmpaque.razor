@@ -116,7 +116,7 @@
 
                                     <tr>
 
-                                        <td>@item.Id</td>
+                                        <td>@item.UtilizadoId</td>
                                         <td>@item.Descripcion</td>
                                         <td>@item.Cantidad</td>
 
@@ -309,10 +309,9 @@
 
         producto = productosBLL.ExisteProducto(utilizado.Descripcion);
 
-        this.utilizado.Id = producto.ProductoId;
-        //this.productoEmpaque.Utilizados.Add(utilizado);
+        this.utilizado.UtilizadoId = producto.ProductoId;
         
-        bool paso = productoEmpaque.Utilizados.Any(u => u.Id == utilizado.Id);
+        bool paso = productoEmpaque.Utilizados.Any(u => u.UtilizadoId == utilizado.UtilizadoId);
 
         if (!paso)
         {
@@ -328,6 +327,8 @@
         
         CacularPesoTotal(utilizado.Descripcion, utilizado.Cantidad);
         LlenarLista(utilizado.Descripcion);
+
+        this.utilizado.producto = producto;
 
         utilizado = new Utilizados();
         
