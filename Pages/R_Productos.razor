@@ -235,6 +235,7 @@
     public void Guardar()
     {
         CalculoValorInventario();
+        CalculoValorGanacia();
 
         if (productosBLL.Guardar(producto))
         {
@@ -276,4 +277,8 @@
         producto.ValorInventario = costo * existencia;
     }
 
+    private void CalculoValorGanacia()
+    {
+        
+    }
 }
