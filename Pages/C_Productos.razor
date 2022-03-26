@@ -107,11 +107,21 @@
             switch (Filtro)
             {
                 case "0":
-                    lista = productosBLL.GetList(t => t.ProductoId == int.Parse(Criterio) || (t.Fecha >= Desde || t.Fecha <= Hasta) );
+                
+                    if (Desde != null || Hasta != null)
+                        lista = productosBLL.GetList(t => t.ProductoId == int.Parse(Criterio) && (t.Fecha >= Desde && t.Fecha <= Hasta) );
+                    else
+                        lista = productosBLL.GetList(t => t.ProductoId == int.Parse(Criterio) || (t.Fecha >= Desde && t.Fecha <= Hasta) );
+                
                 break;
 
                 case "1":
-                    lista = productosBLL.GetList(t => t.Descripcion.ToLower().Contains(Criterio.ToLower()) || (t.Fecha >= Desde || t.Fecha <= Hasta));
+
+                    if (Desde != null || Hasta != null)
+                        lista = productosBLL.GetList(t => t.Descripcion.ToLower().Contains(Criterio.ToLower()) && (t.Fecha >= Desde && t.Fecha <= Hasta));
+                    else
+                        lista = productosBLL.GetList(t => t.Descripcion.ToLower().Contains(Criterio.ToLower()) || (t.Fecha >= Desde && t.Fecha <= Hasta));
+                
                 break;
             }
         }
