@@ -45,7 +45,7 @@ namespace JhonAlbertGuzman_P2.BLL
                     //RestaInvetarios(item.ProductoId);
                 }
 
-                var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
+                //var producido = _contexto.Productos.Find(empaque.EmpaqueId).Existencia += empaque.Cantidad;
                 paso = _contexto.SaveChanges() > 0; 
                 
 
