@@ -296,6 +296,7 @@
 
     private void RemoverFila(Utilizados item)
     {
+        RestarPesoTotal(item.Descripcion, item.Cantidad);
         this.productoEmpaque.Utilizados.Remove(item);
     }
 
@@ -338,6 +339,21 @@
             if (descripcion == item.Descripcion)
             {
                 Total += (item.Peso * cantidad);
+            }
+        }
+    }
+
+    public void RestarPesoTotal(string descripcion, int cantidad)
+    {
+        foreach (var item in listaProductos)
+        {
+            if (descripcion == item.Descripcion)
+            {
+                var auxiliar = Total;
+
+                auxiliar -= (item.Peso * cantidad);
+                
+                Total = auxiliar; 
             }
         }
     }
