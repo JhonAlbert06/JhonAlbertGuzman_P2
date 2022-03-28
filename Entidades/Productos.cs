@@ -32,10 +32,7 @@ namespace JhonAlbertGuzman_P2.Entidades
         [ForeignKey("ProductoId")]
         public List<ProductosDetalle> Detalle { get; set; } = new List<ProductosDetalle> ();
 
-        public Productos()
-        {
-            
-        }
+        public Productos(){}
         
         public Productos(string descripcion)
         {
